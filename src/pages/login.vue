@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { VForm } from 'vuetify/components/VForm'
-import type { LoginResponse } from '@/@fake-db/types'
 import { useAppAbility } from '@/plugins/casl/useAppAbility'
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import axios from '@axios'
@@ -14,6 +12,7 @@ import authV2MaskLight from '@images/pages/misc-mask-light.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
 import { emailValidator, requiredValidator } from '@validators'
+import { VForm } from 'vuetify/components/VForm'
 
 const authThemeImg = useGenerateImageVariant(authV2LoginIllustrationLight, authV2LoginIllustrationDark, authV2LoginIllustrationBorderedLight, authV2LoginIllustrationBorderedDark, true)
 
@@ -32,29 +31,36 @@ const errors = ref<Record<string, string | undefined>>({
 })
 
 const refVForm = ref<VForm>()
-const email = ref('admin@demo.com')
-const password = ref('admin')
+const email = ref('1234567890@gmail.com')
+const password = ref('soccer')
 const rememberMe = ref(false)
 
 const login = () => {
-  axios.post<LoginResponse>('/auth/login', { email: email.value, password: password.value })
-    .then(r => {
-      const { accessToken, userData, userAbilities } = r.data
+  axios.post('/v1/login', { email: email.value, password: password.value })
+    .then(res => {
+      const { session: accessToken, user: userData, user_workspace: userWorkspace } = res.data
 
+      const userAbilities = [{ action:"manage",subject:"all" }]
       localStorage.setItem('userAbilities', JSON.stringify(userAbilities))
       ability.update(userAbilities)
 
       localStorage.setItem('userData', JSON.stringify(userData))
       localStorage.setItem('accessToken', JSON.stringify(accessToken))
+      localStorage.setItem('userWorkspace', JSON.stringify(userWorkspace))
 
       // Redirect to `to` query if exist or redirect to index route
       router.replace(route.query.to ? String(route.query.to) : '/')
     })
     .catch(e => {
-      const { errors: formErrors } = e.response.data
+      console.log(e.response)
+      const error = e?.response?.data || {}
+      console.log("🚀 ~ file: login.vue:61 ~ login ~ error:", error)
 
-      errors.value = formErrors
-      console.error(e.response.data)
+      if (error.message){
+        errors.value = { password: error.message }
+      } else {
+        errors.value = error.errors || {}
+      }
     })
 }
 
@@ -112,21 +118,8 @@ const onSubmit = () => {
             Welcome to <span class="text-capitalize"> {{ themeConfig.app.title }} </span>! 👋🏻
           </h5>
           <p class="mb-0">
-            Please sign-in to your account and start the adventure
+            Please sign-in to your account and start the future
           </p>
-        </VCardText>
-        <VCardText>
-          <VAlert
-            color="primary"
-            variant="tonal"
-          >
-            <p class="text-caption mb-2">
-              Admin Email: <strong>admin@demo.com</strong> / Pass: <strong>admin</strong>
-            </p>
-            <p class="text-caption mb-0">
-              Client Email: <strong>client@demo.com</strong> / Pass: <strong>client</strong>
-            </p>
-          </VAlert>
         </VCardText>
         <VCardText>
           <VForm

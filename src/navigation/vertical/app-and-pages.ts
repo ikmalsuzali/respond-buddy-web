@@ -1,22 +1,26 @@
 export default [
-  { heading: 'Apps & Pages' },
-  {
-    title: 'Messages',
-    icon: { icon: 'tabler-mail' },
-    to: 'apps-email',
-  },
-  {
-    title: 'Chat',
-    icon: { icon: 'tabler-message-circle' },
-    to: 'apps-chat',
-  },
   {
     title: 'Profiles',
     icon: { icon: 'tabler-users' },
     to: 'apps-user-list',
   },
   {
-    title: 'Roles & Permissions',
+    title: 'Messages',
+    icon: { icon: 'tabler-mail' },
+    to: 'apps-email',
+  },
+  {
+    title: 'Memory',
+    icon: { icon: 'tabler-database' },
+    to: 'apps-email',
+  },
+  {
+    title: 'Connections',
+    icon: { icon: 'tabler-cloud-data-connection' },
+    to: 'apps-email',
+  },
+  {
+    title: 'Teams',
     icon: { icon: 'tabler-settings' },
     children: [
       { title: 'Roles', to: 'apps-roles' },
