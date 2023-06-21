@@ -14,8 +14,8 @@ const router = createRouter({
       redirect: to => {
         const userData = JSON.parse(localStorage.getItem('userData') || '{}')
 
-        if (userData.user_id)
-          return { name: 'dashboards-analytics' }
+        if (userData.user_id || userData.id)
+          return { name: 'dashboards-home' }
       
         return { name: 'login', query: to.query }
       },

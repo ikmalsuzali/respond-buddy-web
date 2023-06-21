@@ -34,8 +34,10 @@ const refVForm = ref<VForm>()
 const email = ref('1234567890@gmail.com')
 const password = ref('soccer')
 const rememberMe = ref(false)
+const isLoading = ref(false)
 
 const login = () => {
+  isLoading.value = true
   axios.post('/v1/login', { email: email.value, password: password.value })
     .then(res => {
       const { session: accessToken, user: userData, user_workspace: userWorkspace } = res.data
@@ -61,6 +63,8 @@ const login = () => {
       } else {
         errors.value = error.errors || {}
       }
+    }).finally(() => {
+      isLoading.value = false
     })
 }
 
@@ -167,6 +171,7 @@ const onSubmit = () => {
                 <VBtn
                   block
                   type="submit"
+                  :loading="isLoading"
                 >
                   Login
                 </VBtn>

@@ -1,13 +1,18 @@
 export default [
   {
-    title: 'Profiles',
-    icon: { icon: 'tabler-users' },
-    to: 'apps-user-list',
+    title: 'Dashboard',
+    icon: { icon: 'tabler-smart-home' },
+    to: 'dashboards-home',
   },
   {
     title: 'Messages',
     icon: { icon: 'tabler-mail' },
     to: 'apps-email',
+  },
+  {
+    title: 'Profiles',
+    icon: { icon: 'tabler-users' },
+    to: 'apps-profile-list',
   },
   {
     title: 'Memory',
@@ -17,6 +22,11 @@ export default [
   {
     title: 'Connections',
     icon: { icon: 'tabler-cloud-data-connection' },
+    to: 'apps-email',
+  },
+  {
+    title: 'Context tags',
+    icon: { icon: 'tabler-tags' },
     to: 'apps-email',
   },
   {

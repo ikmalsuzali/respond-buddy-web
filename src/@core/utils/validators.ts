@@ -34,6 +34,10 @@ export const passwordValidator = (password: string) => {
   )
 }
 
+export const confirmPasswordValidator = (password: string, confirmPassword: string) => {
+  return password === confirmPassword || 'Password does not match'
+}
+
 // 👉 Confirm Password Validator
 export const confirmedValidator = (value: string, target: string) =>
 

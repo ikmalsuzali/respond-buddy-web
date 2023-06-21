@@ -162,12 +162,12 @@ const resolveCategories = (val: string) => {
                 [esc]
               </div>
 
-              <IconBtn
+              <!-- <IconBtn
                 size="small"
                 @click="clearSearchAndCloseDialog"
               >
                 <VIcon icon="tabler-x" />
-              </IconBtn>
+              </IconBtn> -->
             </div>
           </template>
         </VTextField>
