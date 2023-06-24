@@ -17,12 +17,12 @@ export default [
   {
     title: 'Memory',
     icon: { icon: 'tabler-database' },
-    to: 'apps-email',
+    to: 'apps-memory',
   },
   {
     title: 'Connections',
     icon: { icon: 'tabler-cloud-data-connection' },
-    to: 'apps-email',
+    to: 'apps-connections',
   },
   {
     title: 'Context tags',

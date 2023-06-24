@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { hexToRgb } from '@layouts/utils';
-import VueApexCharts from 'vue3-apexcharts';
 import { useTheme } from 'vuetify';
 
 const vuetifyTheme = useTheme()
@@ -167,31 +166,47 @@ const chartOptions = computed(() => {
 
 <template>
   <VCard>
-    <VCardText class="d-flex justify-space-between">
-      <div class="d-flex flex-column">
+    <VCardText class="justify-space-between">
+      <div class="">
         <div class="mb-auto">
           <h5 class="text-h5 text-no-wrap mb-2">
              Subscription
           </h5>
-          <p class="mb-0 text-sm">
+          <p class="mb-2 text-md">
             {{ 'Basic Plan' }}
           </p>
-          <div class="">
-        <p class="mb-0 text-sm">Messages: {{ `0/500` }}</p>
-        <p class="mb-0 text-sm">Storage: {{ `0/500 MB` }}</p>
-        <p class="mb-0 text-sm">Users: {{ `1/5 users` }}</p>
-      </div>
+         
         </div>
       </div>
       <div>
+        <div class="space-y-2">
+        <p class="my-2 text-sm">Messages: {{ `10/500` }}</p>
+        <VProgressLinear
+                rounded
+                color="primary"
+                :height="10"
+                :model-value="75"
+              />
+        <p class="my-2 text-sm">Storage: {{ `0/500 MB` }}</p>
+        <VProgressLinear
+                rounded
+                color="primary"
+                :height="10"
+                :model-value="75"
+              />
+        <p class="my-2 text-sm">Users: {{ `1/5 users` }}</p>
+        <VProgressLinear
+                rounded
+                color="primary"
+                :height="10"
+                :model-value="75"
+              />
+      </div>
+
+       
       
 
 
-        <VueApexCharts
-          :options="chartOptions"
-          :series="series"
-          :height="165"
-        />
       </div>
     </VCardText>
   </VCard>
