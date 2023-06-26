@@ -28,6 +28,18 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emit>()
 const isDialogVisible = ref(false)
+const selectedMemory = ref()
+
+const onCardClick = (memory: any) => {
+  selectedMemory.value = memory
+  isDialogVisible.value = true
+}
+
+watch(isDialogVisible, (val) => {
+  if (!val) {
+    selectedMemory.value = null
+  }
+})
 
 </script>
 
@@ -41,7 +53,7 @@ const isDialogVisible = ref(false)
       sm="6"
       lg="2"
     >
-    <VCard @click="isDialogVisible = true">
+    <VCard @click="onCardClick(memory)">
         <VCardText>
           <VAvatar
             rounded
@@ -71,6 +83,7 @@ const isDialogVisible = ref(false)
   </VRow>
   <MemoryDialogFullscreen
     v-model:is-dialog-visible="isDialogVisible"
+    :memory="selectedMemory"
   />
 
 </template>

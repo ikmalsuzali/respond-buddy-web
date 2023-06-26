@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import MemoryCards from '@/views/apps/memory/MemoryCards.vue';
-import MemoryDialogFullscreen from '@/views/apps/memory/MemoryDialogFullscreen.vue';
 import MemoryList from '@/views/apps/memory/MemoryList.vue';
 
 import axios from '@axios';
