@@ -111,7 +111,7 @@ export type SortItem = { key: string, order?: boolean | 'asc' | 'desc' }
 
 export interface Options { 
   page: number
-  itemsPerPage:  number
+  itemsPerPage: number
   sortBy: readonly SortItem[]
   groupBy: readonly SortItem[]
   search: string | undefined

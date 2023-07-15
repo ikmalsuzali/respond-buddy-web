@@ -5,7 +5,7 @@
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.autoClosingBrackets": "always"
   },
   "[markdown]": {
@@ -24,7 +24,7 @@
   },
   // Vue
   "[vue]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   // Extension: Volar
   "volar.preview.port": 3000,

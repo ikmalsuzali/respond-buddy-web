@@ -10,17 +10,7 @@ const interest = ref<string[]>([])
 </script>
 
 <template>
-  <VDialog
-    v-model="isDialogVisible"
-    max-width="600"
-  >
-    <!-- Dialog Activator -->
-    <template #activator="{ props }">
-      <VBtn v-bind="props">
-        Open Dialog
-      </VBtn>
-    </template>
-
+  <VDialog v-model="isDialogVisible" max-width="600">
     <!-- Dialog close btn -->
     <DialogCloseBtn @click="isDialogVisible = !isDialogVisible" />
 
@@ -28,31 +18,13 @@ const interest = ref<string[]>([])
     <VCard title="User Profile">
       <VCardText>
         <VRow>
-          <VCol
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <AppTextField
-              v-model="firstName"
-              label="First Name"
-            />
+          <VCol cols="12" sm="6" md="4">
+            <AppTextField v-model="firstName" label="First Name" />
           </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-            md="4"
-          >
-            <AppTextField
-              v-model="middleName"
-              label="Middle Name"
-            />
+          <VCol cols="12" sm="6" md="4">
+            <AppTextField v-model="middleName" label="Middle Name" />
           </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-            md="4"
-          >
+          <VCol cols="12" sm="6" md="4">
             <AppTextField
               v-model="lastName"
               label="Last Name"
@@ -60,36 +32,16 @@ const interest = ref<string[]>([])
             />
           </VCol>
           <VCol cols="12">
-            <AppTextField
-              v-model="email"
-              label="Email"
-            />
+            <AppTextField v-model="email" label="Email" />
           </VCol>
           <VCol cols="12">
-            <AppTextField
-              v-model="password"
-              label="Password"
-              type="password"
-            />
+            <AppTextField v-model="password" label="Password" type="password" />
           </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <AppTextField
-              v-model="age"
-              label="Age"
-              type="number"
-            />
+          <VCol cols="12" sm="6">
+            <AppTextField v-model="age" label="Age" type="number" />
           </VCol>
-          <VCol
-            cols="12"
-            sm="6"
-          >
-            <AppTextField
-              v-model="interest"
-              label="Interests"
-            />
+          <VCol cols="12" sm="6">
+            <AppTextField v-model="interest" label="Interests" />
           </VCol>
         </VRow>
       </VCardText>
@@ -102,9 +54,7 @@ const interest = ref<string[]>([])
         >
           Close
         </VBtn>
-        <VBtn @click="isDialogVisible = false">
-          Save
-        </VBtn>
+        <VBtn @click="isDialogVisible = false"> Save </VBtn>
       </VCardText>
     </VCard>
   </VDialog>

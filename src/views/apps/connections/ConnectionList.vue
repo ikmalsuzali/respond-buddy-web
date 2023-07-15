@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { useMemoryStore } from '@/views/apps/memory/useMemoryStore'
+import { useConnectionStore } from '@/views/apps/connections/useConnectionStore'
 import { useWorkspaceStore } from '@/views/apps/workspace/useWorkspaceStore'
 import type { Options } from '@core/types'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
 import DeleteDialog from './DeleteDialog.vue'
+import DynamicDialogForm from './DynamicDialogForm.vue'
 
 // 👉 Store
+const connectionStore = useConnectionStore()
 const workspaceStore = useWorkspaceStore()
-const memoryStore = useMemoryStore()
 const searchQuery = ref('')
 const totalItems = ref(0)
 const isMemoryLoading = ref(false)
@@ -26,36 +27,18 @@ const options = ref<Options>({
 })
 
 const headers = [
-  { title: 'File', key: 'name', width: '20%' },
-  { title: 'Created by', key: 'created_by', width: '10%' },
+  { title: 'Connections', key: 'name', width: '20%' },
   { title: 'Created at', key: 'created_at', width: '10%' },
-  { title: 'Size', key: 'size', width: '5%' },
+  { title: 'Status', key: 'status', width: '5%' },
   { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-]
-
-const deleteMethods = [
-  {
-    icon: 'tabler-cancel',
-    title: 'Cancel request',
-    subtitle:
-      'Cancel the request to delete this memory. This will keep the memory in your account.',
-    method: 'cancel',
-  },
-  {
-    icon: 'tabler-message',
-    title: 'Delete memory',
-    subtitle:
-      'Deleting this memory will remove it from your account and all other accounts that have access to it.',
-    method: 'delete',
-  },
 ]
 
 // 👉 Fetching users
 
-const fetchMemorys = () => {
+const fetchWorkspaces = () => {
   isMemoryLoading.value = true
-  memoryStore
-    .fetchMemories({
+  connectionStore
+    .fetchWorkspaceIntegrations({
       search: searchQuery.value,
       page: options.value.page,
       limit: options.value.itemsPerPage,
@@ -73,65 +56,30 @@ const fetchMemorys = () => {
     })
 }
 
-const formatBytes = (bytes: number) => {
-  if (bytes < 1024 * 1024) {
-    return (bytes / 1024).toFixed(2) + ' KB'
-  } else if (bytes < 1024 * 1024 * 1024) {
-    return (bytes / (1024 * 1024)).toFixed(2) + ' MB'
-  } else {
-    return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB'
-  }
-}
+const onEdit = (workspaceIntegration: any) => {}
 
-const onDownload = (memory: any) => {
-  // Download s3 file
-  console.log(memory?.s3_s3Tostore?.s3_url)
-  const link = document.createElement('a')
-  link.href = memory?.s3_s3Tostore?.s3_url
-  link.target = '_blank'
-  link.download = 'hello'
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
-  window.URL.revokeObjectURL(memory?.s3_s3Tostore?.s3_url)
-}
-
-// const fetchDocs = () => {
-//   isDocLoading.value = false
-//   memoryStore
-//     .fetchMemoryByDoc({
-//       search: searchQuery.value,
-//       status: selectedStatus.value,
-//       plan: selectedPlan.value,
-//       role: selectedRole.value,
-//       options: options.value,
-//     })
-//     .then((response) => {
-//       users.value = response.data.users
-//       totalUsers.value = response.data.totalUsers
-//       options.value.page = response.data.page
-//     })
-//     .catch((error) => {
-//       console.error(error)
-//     })
-//     .finally(() => {
-//       isDocLoading.value = true
-//     })
-// }
+const deleteMethods = [
+  {
+    icon: 'tabler-cancel',
+    title: 'Cancel request',
+    subtitle:
+      'Cancel the request to delete this integration. This will keep the integration in your account.',
+    method: 'cancel',
+  },
+  {
+    icon: 'tabler-message',
+    title: 'Delete connections',
+    subtitle:
+      'Deleting this connection will remove it from your account and all other accounts that have access to it.',
+    method: 'delete',
+  },
+]
 
 watchEffect(() => {
-  fetchMemorys()
-  // fetchDocs()
+  fetchWorkspaces()
 })
 
 // 👉 search filters
-const memoryHeader = [
-  { title: 'Admin', value: 'admin' },
-  { title: 'Author', value: 'author' },
-  { title: 'Editor', value: 'editor' },
-  { title: 'Maintainer', value: 'maintainer' },
-  { title: 'Subscriber', value: 'subscriber' },
-]
 
 const resolveType = (stat: string) => {
   const statLowerCase = stat.toLowerCase()
@@ -141,8 +89,6 @@ const resolveType = (stat: string) => {
 
   return 'primary'
 }
-
-const isAddNewUserDrawerVisible = ref(false)
 
 // 👉 Add new user
 // const addNewUser = (userData: UserProperties) => {
@@ -173,7 +119,7 @@ const onSubmitDeletion = () => {
         <!-- 👉 Search  -->
         <AppTextField
           v-model="searchQuery"
-          placeholder="Search Memory"
+          placeholder="Search Connections"
           density="comfortable"
           style="width: 100%"
         />
@@ -185,7 +131,7 @@ const onSubmitDeletion = () => {
       <VDataTableServer
         v-model:items-per-page="options.itemsPerPage"
         v-model:page="options.page"
-        :items="memoryStore.$state.memories"
+        :items="connectionStore.$state.workspaceIntegrations"
         :items-length="totalItems"
         :headers="headers"
         :loading="isMemoryLoading"
@@ -194,28 +140,27 @@ const onSubmitDeletion = () => {
       >
         <!-- File  -->
         <template #item.name="{ item }">
-          <span class="text-capitalize font-weight-medium">{{
-            item.raw.s3_s3Tostore?.original_name ||
-            item.raw.s3_s3Tostore?.original_name
+          <VAvatar size="20" :image="item.raw.integrations?.icon" />
+
+          <span class="text-capitalize font-weight-medium ml-3 mt-3">{{
+            item.raw.integrations.name
           }}</span>
         </template>
         <!-- User -->
-        <template #item.created_by="{ item }">
+        <!-- <template #item.created_by="{ item }">
           <span class="text-capitalize font-weight-medium">{{
-            item.raw.users?.first_name && totalItems.raw.users?.last_name
-              ? item.raw.users?.first_name + ' ' + item.raw.users?.last_name
-              : item.raw.users?.email
+        
           }}</span>
-        </template>
+        </template> -->
 
         <!-- User -->
-        <template #item.size="{ item }">
+        <!-- <template #item.size="{ item }">
           <span class="text-capitalize font-weight-medium">{{
             item.raw.s3_s3Tostore?.file_size
               ? formatBytes(item.raw.s3_s3Tostore?.file_size)
               : '0'
           }}</span>
-        </template>
+        </template> -->
 
         <!-- <template #item.name="{ item }">
           <div class="d-flex align-center">
@@ -340,8 +285,8 @@ const onSubmitDeletion = () => {
 
         <!-- Actions -->
         <template #item.actions="{ item }">
-          <IconBtn @click="onDownload(item.raw)">
-            <VIcon icon="tabler-download" />
+          <IconBtn @click="onEdit(item.raw)">
+            <VIcon icon="tabler-edit" />
           </IconBtn>
           <IconBtn @click="deleteMemory(item.raw.id)">
             <VIcon icon="tabler-trash" />
@@ -356,6 +301,9 @@ const onSubmitDeletion = () => {
       v-model:is-dialog-visible="isDeleteDialogEnabled.visible"
       :delete-methods="deleteMethods"
       @onDelete="onSubmitDeletion"
+    />
+    <DynamicDialogForm
+      v-if="connectionStore.isWorkspaceIntegrationDialogOpen"
     />
   </section>
 </template>

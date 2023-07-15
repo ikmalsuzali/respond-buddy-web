@@ -1,39 +1,17 @@
 <script setup lang="ts">
 import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
-import { useMemoryStore } from './useMemoryStore'
+import { useConnectionStore } from './useConnectionStore'
 
-interface Props {
-  memories: any[]
-  isLoading: boolean
-}
+const connectionStore = useConnectionStore()
 
-interface Emit {
-  (e: 'memoryClick', value: any): void
-}
-const memoryStore = useMemoryStore()
-const props = withDefaults(defineProps<Props>(), {
-  memories: [],
-  isLoading: false,
-})
-
-const emit = defineEmits<Emit>()
-const isDialogVisible = ref(false)
-const selectedMemory = ref()
-
-const onCardClick = (memory: any) => {
-  memoryStore.setMemoryDialogOpen(true)
-  memoryStore.setSelectedMemoryType(memory)
-}
-
-watch(isDialogVisible, (val) => {
-  if (!val) {
-    selectedMemory.value = null
-  }
-})
+// const onCardClick = (memory: any) => {
+//   memoryStore.setMemoryDialogOpen(true)
+//   memoryStore.setSelectedMemoryType(memory)
+// }
 </script>
 
 <template>
-  <VRow v-if="isLoading">
+  <VRow v-if="connectionStore.isIntegrationsLoading">
     <VCol v-for="() in 6">
       <VSkeletonLoader
         class="mx-auto border"
@@ -43,7 +21,13 @@ watch(isDialogVisible, (val) => {
   </VRow>
   <VRow v-else>
     <!-- 👉 Roles -->
-    <VCol v-for="(memory, key) in memories" :key="key" cols="12" sm="6" lg="2">
+    <VCol
+      v-for="(memory, key) in connectionStore.integrations"
+      :key="key"
+      cols="12"
+      sm="6"
+      lg="2"
+    >
       <VCard @click="onCardClick(memory)">
         <VCardText>
           <VAvatar rounded size="42" :image="memory.icon"> </VAvatar>
