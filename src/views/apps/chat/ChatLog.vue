@@ -1,130 +1,143 @@
 <script lang="ts" setup>
-import type { ChatOut } from '@/@fake-db/types'
 import { useChatStore } from '@/views/apps/chat/useChatStore'
-import { formatDate } from '@core/utils/formatters'
+import { useMemoryStore } from '../memory/useMemoryStore'
 
 const store = useChatStore()
-
-interface MessageGroup {
-  senderId: ChatOut['messages'][number]['senderId']
-  messages: Omit<ChatOut['messages'][number], 'senderId'>[]
-}
+const memory = useMemoryStore()
 
 const contact = computed(() => ({
   id: store.activeChat?.contact.id,
   avatar: store.activeChat?.contact.avatar,
 }))
 
-// Feedback icon
-const resolveFeedbackIcon = (feedback: ChatOut['messages'][number]['feedback']) => {
-  if (feedback.isSeen)
-    return { icon: 'tabler-checks', color: 'success' }
-  else if (feedback.isDelivered)
-    return { icon: 'tabler-checks', color: undefined }
-  else
-    return { icon: 'tabler-check', color: undefined }
+const formattedText = (text: string) => {
+  return text.replace(/\n/g, '<br>').replace(/```/g, '&#96;&#96;&#96;') // Replace \n with <br> and ``` with &#96;&#96;&#96; for rendering line breaks and backticks
 }
 
+// Feedback icon
+// const resolveFeedbackIcon = (
+//   feedback: ChatOut['messages'][number]['feedback']
+// ) => {
+//   if (feedback.isSeen) return { icon: 'tabler-checks', color: 'success' }
+//   else if (feedback.isDelivered)
+//     return { icon: 'tabler-checks', color: undefined }
+//   else return { icon: 'tabler-check', color: undefined }
+// }
+
+const messages = computed(() => {
+  // @ts-ignore
+  return memory.selectedMemoryChat[memory.selectedMemory.id]
+})
+console.log(
+  '🚀 ~ file: ChatLog.vue:26 ~ memory.selectedMemoryChat:',
+  memory.selectedMemoryChat
+)
+console.log(
+  '🚀 ~ file: ChatLog.vue:26 ~ memory.selectedMemory.id:',
+  memory.selectedMemory.id
+)
+
 const msgGroups = computed(() => {
-  let messages: ChatOut['messages'] = []
+  const _msgGroups: any = []
 
-  const _msgGroups: MessageGroup[] = []
-
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  if (store.activeChat!.chat) {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    messages = store.activeChat!.chat.messages
-
-    let msgSenderId = messages[0].senderId
-
-    let msgGroup: MessageGroup = {
-      senderId: msgSenderId,
-      messages: [],
-    }
-
-    messages.forEach((msg, index) => {
-      if (msgSenderId === msg.senderId) {
-        msgGroup.messages.push({
-          message: msg.message,
-          time: msg.time,
-          feedback: msg.feedback,
-        })
-      }
-      else {
-        msgSenderId = msg.senderId
-        _msgGroups.push(msgGroup)
-        msgGroup = {
-          senderId: msg.senderId,
-          messages: [
-            {
-              message: msg.message,
-              time: msg.time,
-              feedback: msg.feedback,
-            },
-          ],
-        }
-      }
-
-      if (index === messages.length - 1)
-        _msgGroups.push(msgGroup)
-    })
+  let msgGroup = {
+    messages: [],
   }
+
+  console.log(messages.value)
+
+  if (messages.value?.length == 0) return []
+
+  messages.value?.forEach((msg: any, index: number) => {
+    msgGroup = {
+      senderId: msg.customer,
+      messages: [
+        {
+          senderId: msg.customer,
+          message: msg.content,
+          time: msg.created_at,
+          // feedback: msg.feedback,
+        },
+      ],
+    }
+    _msgGroups.push(msgGroup)
+
+    // if (index === messages.length - 1) _msgGroups.push(msgGroup)
+  })
 
   return _msgGroups
 })
 </script>
 
 <template>
-  <div class="chat-log pa-5">
+  <div class="chat-log">
     <div
       v-for="(msgGrp, index) in msgGroups"
-      :key="msgGrp.senderId + String(index)"
-      class="chat-group d-flex align-start"
-      :class="[{
-        'flex-row-reverse': msgGrp.senderId !== contact.id,
-        'mb-4': msgGroups.length - 1 !== index,
-      }]"
+      :key="index"
+      style="border-bottom: 1px solid rgb(235, 234, 226)"
+      class="chat-group d-flex align-start pa-5"
+      :class="msgGrp.senderId ? 'sender-msg-container' : 'bot-msg-container'"
     >
-      <div
-        class="chat-avatar"
-        :class="msgGrp.senderId !== contact.id ? 'ms-4' : 'me-4'"
-      >
-        <VAvatar size="32">
-          <VImg :src="msgGrp.senderId === contact.id ? contact.avatar : store.profileUser?.avatar" />
+      <div class="me-4">
+        <VAvatar
+          v-if="msgGrp.senderId"
+          icon="tabler-user"
+          style="border-radius: 4px !important; background-color: #ffa726"
+          rounded="0"
+          size="32"
+        >
+        </VAvatar>
+        <VAvatar
+          v-else
+          style="border-radius: 4px !important; background-color: #bdbdbd"
+          rounded="0"
+          size="32"
+        >
+          RB
         </VAvatar>
       </div>
       <div
         class="chat-body d-inline-flex flex-column"
-        :class="msgGrp.senderId !== contact.id ? 'align-end' : 'align-start'"
+        :class="msgGrp.senderId ? 'align-end' : 'align-start'"
       >
         <p
           v-for="(msgData, msgIndex) in msgGrp.messages"
           :key="msgData.time"
-          class="chat-content py-2 px-4 elevation-1"
-          style="background-color: rgb(var(--v-theme-surface));"
-          :class="[
-            msgGrp.senderId === contact.id ? 'chat-left' : 'bg-primary text-white chat-right',
-            msgGrp.messages.length - 1 !== msgIndex ? 'mb-3' : 'mb-1',
-          ]"
+          class="py-1 px-1 chat-font"
+          :class="[msgGrp.messages.length - 1 !== msgIndex ? 'mb-3' : 'mb-1']"
+          style="line-height: 1.7"
         >
-          {{ msgData.message }}
+         <pre class="formatted-text" v-html="formattedText(msgData.message)"></pre>
         </p>
-        <div :class="{ 'text-right': msgGrp.senderId !== contact.id }">
-          <VIcon
+        <div :class="{ 'text-right': msgGrp.senderId }">
+          <!-- <VIcon
             v-if="msgGrp.senderId !== contact.id"
             size="18"
-            :color="resolveFeedbackIcon(msgGrp.messages[msgGrp.messages.length - 1].feedback).color"
+            :color="
+              resolveFeedbackIcon(
+                msgGrp.messages[msgGrp.messages.length - 1].feedback
+              ).color
+            "
           >
-            {{ resolveFeedbackIcon(msgGrp.messages[msgGrp.messages.length - 1].feedback).icon }}
-          </VIcon>
-          <span class="text-sm ms-1 text-disabled">{{ formatDate(msgGrp.messages[msgGrp.messages.length - 1].time, { hour: 'numeric', minute: 'numeric' }) }}</span>
+            {{
+              resolveFeedbackIcon(
+                msgGrp.messages[msgGrp.messages.length - 1].feedback
+              ).icon
+            }}
+          </VIcon> -->
+          <!-- <span class="text-sm ms-1 text-disabled">{{
+            formatDate(msgGrp.messages[msgGrp.messages.length - 1].time, {
+              hour: 'numeric',
+              minute: 'numeric',
+            })
+          }}</span> -->
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<style lang=scss>
+<style lang="scss">
 .chat-log {
   .chat-content {
     border-end-end-radius: 6px;
@@ -138,5 +151,29 @@ const msgGroups = computed(() => {
       border-start-start-radius: 6px;
     }
   }
+}
+
+.chat-font {
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 400;
+  color: #212121;
+}
+
+.sender-msg-container {
+  background-color: white;
+}
+
+.bot-msg-container {
+  background-color: rgb(250, 249, 246);
+}
+
+.formatted-text {
+  white-space: pre-wrap; /* Preserve whitespace and wrap long lines */
+  font-style: normal;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Public Sans', sans-serif !important;
+  color: #212121;
 }
 </style>

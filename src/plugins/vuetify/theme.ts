@@ -1,8 +1,8 @@
-import type { VuetifyOptions } from 'vuetify'
 import { resolveVuetifyTheme } from '@core/utils/vuetify'
 import { themeConfig } from '@themeConfig'
+import type { VuetifyOptions } from 'vuetify'
 
-export const staticPrimaryColor = '#7367F0'
+export const staticPrimaryColor = '#03DAC6'
 
 const theme: VuetifyOptions['theme'] = {
   defaultTheme: resolveVuetifyTheme(),
@@ -10,18 +10,21 @@ const theme: VuetifyOptions['theme'] = {
     light: {
       dark: false,
       colors: {
-        'primary': localStorage.getItem(`${themeConfig.app.title}-lightThemePrimaryColor`) || staticPrimaryColor,
+        primary:
+          localStorage.getItem(
+            `${themeConfig.app.title}-lightThemePrimaryColor`
+          ) || staticPrimaryColor,
         'on-primary': '#fff',
-        'secondary': '#A8AAAE',
+        secondary: '#A8AAAE',
         'on-secondary': '#fff',
-        'success': '#28C76F',
+        success: '#28C76F',
         'on-success': '#fff',
-        'info': '#00CFE8',
+        info: '#00CFE8',
         'on-info': '#fff',
-        'warning': '#FF9F43',
+        warning: '#FF9F43',
         'on-warning': '#fff',
-        'error': '#EA5455',
-        'background': '#F8F7FA',
+        error: '#EA5455',
+        background: '#F8F7FA',
         'on-background': '#2F2B3D',
         'on-surface': '#2F2B3D',
         'grey-50': '#FAFAFA',
@@ -67,20 +70,23 @@ const theme: VuetifyOptions['theme'] = {
     dark: {
       dark: true,
       colors: {
-        'primary': localStorage.getItem(`${themeConfig.app.title}-darkThemePrimaryColor`) || staticPrimaryColor,
+        primary:
+          localStorage.getItem(
+            `${themeConfig.app.title}-darkThemePrimaryColor`
+          ) || staticPrimaryColor,
         'on-primary': '#fff',
-        'secondary': '#A8AAAE',
+        secondary: '#A8AAAE',
         'on-secondary': '#fff',
-        'success': '#28C76F',
+        success: '#28C76F',
         'on-success': '#fff',
-        'info': '#00CFE8',
+        info: '#00CFE8',
         'on-info': '#fff',
-        'warning': '#FF9F43',
+        warning: '#FF9F43',
         'on-warning': '#fff',
-        'error': '#EA5455',
-        'background': '#25293C',
+        error: '#EA5455',
+        background: '#25293C',
         'on-background': '#D0D4F1',
-        'surface': '#2F3349',
+        surface: '#2F3349',
         'on-surface': '#D0D4F1',
         'grey-50': '#26293A',
         'grey-100': '#2F3349',
@@ -92,13 +98,13 @@ const theme: VuetifyOptions['theme'] = {
         'grey-700': '#B6BEE3',
         'grey-800': '#CFD3EC',
         'grey-900': '#E7E9F6',
-        'perfect-scrollbar-thumb': '#4A5072',
-        'skin-bordered-background': '#2f3349',
-        'skin-bordered-surface': '#2f3349',
+        'perfect-scrollbar-thumb': '#2f3349',
+        'skin-bordered-background': '#000',
+        'skin-bordered-surface': '#121212',
       },
       variables: {
         'code-color': '#d400ff',
-        'overlay-scrim-background': '#101121',
+        'overlay-scrim-background': '#121212',
         'tooltip-background': '#5E6692',
         'overlay-scrim-opacity': 0.6,
         'hover-opacity': 0.04,

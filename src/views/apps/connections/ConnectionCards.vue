@@ -4,10 +4,9 @@ import { useConnectionStore } from './useConnectionStore'
 
 const connectionStore = useConnectionStore()
 
-// const onCardClick = (memory: any) => {
-//   memoryStore.setMemoryDialogOpen(true)
-//   memoryStore.setSelectedMemoryType(memory)
-// }
+const onCardClick = (connection: any) => {
+  connectionStore.setSelectedIntegration(connection)
+}
 </script>
 
 <template>

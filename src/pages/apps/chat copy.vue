@@ -3,17 +3,18 @@ import type { ChatContact as TypeChatContact } from '@/@fake-db/types'
 import vuetifyInitialThemes from '@/plugins/vuetify/theme'
 import ChatActiveChatUserProfileSidebarContent from '@/views/apps/chat/ChatActiveChatUserProfileSidebarContent.vue'
 import ChatLeftSidebarContent from '@/views/apps/chat/ChatLeftSidebarContent.vue'
+import ChatLog from '@/views/apps/chat/ChatLog.vue'
+import ChatUserProfileSidebarContent from '@/views/apps/chat/ChatUserProfileSidebarContent.vue'
 import { useChat } from '@/views/apps/chat/useChat'
 import { useChatStore } from '@/views/apps/chat/useChatStore'
-import { useMemoryStore } from '@/views/apps/memory/useMemoryStore'
 import { useResponsiveLeftSidebar } from '@core/composable/useResponsiveSidebar'
+import { avatarText } from '@core/utils/formatters'
 import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
 import { useDisplay, useTheme } from 'vuetify'
 
 // composables
 const vuetifyDisplays = useDisplay()
 const store = useChatStore()
-const memory = useMemoryStore()
 const { isLeftSidebarOpen } = useResponsiveLeftSidebar(
   vuetifyDisplays.smAndDown
 )
@@ -45,19 +46,7 @@ const msg = ref('')
 const sendMessage = async () => {
   if (!msg.value) return
 
-  memory.pushMesageToChat({
-    storeId: memory.selectedMemory?.id,
-    message: msg.value,
-  })
-
-  nextTick(() => {
-    scrollToBottomInChatLog()
-  })
-
-  await memory.saveMessage({
-    storeId: memory.selectedMemory?.id,
-    message: msg.value,
-  })
+  await store.sendMsg(msg.value)
 
   // Reset message input
   msg.value = ''
@@ -86,19 +75,6 @@ const openChatOfContact = async (userId: TypeChatContact['id']) => {
     scrollToBottomInChatLog()
   })
 }
-
-const fetchMessages = async () => {
-  await memory.getMessages({
-    storeId: memory.selectedMemory?.id,
-  })
-
-  // Scroll to bottom
-  nextTick(() => {
-    scrollToBottomInChatLog()
-  })
-}
-
-fetchMessages()
 
 // User profile sidebar
 const isUserProfileSidebarOpen = ref(false)
@@ -132,9 +108,25 @@ const chatContentContainerBg = computed(() => {
 
 <template>
   <VLayout class="chat-app-layout">
+    <!-- 👉 user profile sidebar -->
+    <VNavigationDrawer
+      v-model="isUserProfileSidebarOpen"
+      temporary
+      touchless
+      absolute
+      class="user-profile-sidebar"
+      location="start"
+      width="370"
+    >
+      <ChatUserProfileSidebarContent
+        @close="isUserProfileSidebarOpen = false"
+      />
+    </VNavigationDrawer>
+
+    <!-- 👉 Active Chat sidebar -->
     <VNavigationDrawer
       v-model="isActiveChatUserProfileSidebarOpen"
-      width="700"
+      width="374"
       absolute
       temporary
       location="end"
@@ -145,12 +137,14 @@ const chatContentContainerBg = computed(() => {
         @close="isActiveChatUserProfileSidebarOpen = false"
       />
     </VNavigationDrawer>
+
+    <!-- 👉 Left sidebar   -->
     <VNavigationDrawer
       v-model="isLeftSidebarOpen"
       absolute
       touchless
       location="start"
-      width="600"
+      width="370"
       :temporary="$vuetify.display.smAndDown"
       class="chat-list-sidebar"
       :permanent="$vuetify.display.mdAndUp"
@@ -163,37 +157,140 @@ const chatContentContainerBg = computed(() => {
         @close="isLeftSidebarOpen = false"
       />
     </VNavigationDrawer>
+
+    <!-- 👉 Chat content -->
     <VMain class="chat-content-container">
-      <div v-if="memory?.selectedMemory?.id" class="d-flex flex-column h-100">
-        <!-- <div
+      <!-- 👉 Right content: Active Chat -->
+      <div v-if="store.activeChat" class="d-flex flex-column h-100">
+        <!-- 👉 Active chat header -->
+        <div
           class="active-chat-header d-flex align-center text-medium-emphasis bg-surface"
         >
+          <!-- Sidebar toggler -->
           <IconBtn class="d-md-none me-3" @click="isLeftSidebarOpen = true">
             <VIcon icon="tabler-menu-2" />
           </IconBtn>
+
+          <!-- avatar -->
           <div
             class="d-flex align-center cursor-pointer"
             @click="isActiveChatUserProfileSidebarOpen = true"
-          ></div>
+          >
+            <VBadge
+              dot
+              location="bottom right"
+              offset-x="3"
+              offset-y="0"
+              :color="
+                resolveAvatarBadgeVariant(store.activeChat.contact.status)
+              "
+              bordered
+            >
+              <VAvatar
+                size="38"
+                :variant="
+                  !store.activeChat.contact.avatar ? 'tonal' : undefined
+                "
+                :color="
+                  !store.activeChat.contact.avatar
+                    ? resolveAvatarBadgeVariant(store.activeChat.contact.status)
+                    : undefined
+                "
+                class="cursor-pointer"
+              >
+                <VImg
+                  v-if="store.activeChat.contact.avatar"
+                  :src="store.activeChat.contact.avatar"
+                  :alt="store.activeChat.contact.fullName"
+                />
+                <span v-else>{{
+                  avatarText(store.activeChat.contact.fullName)
+                }}</span>
+              </VAvatar>
+            </VBadge>
+
+            <div class="flex-grow-1 ms-4 overflow-hidden">
+              <p class="text-h6 mb-0">
+                {{ store.activeChat.contact.fullName }}
+              </p>
+              <p class="text-truncate mb-0 text-disabled">
+                {{ store.activeChat.contact.role }}
+              </p>
+            </div>
+          </div>
 
           <VSpacer />
+
+          <!-- Header right content -->
+          <div class="d-sm-flex align-center d-none">
+            <IconBtn>
+              <VIcon icon="tabler-phone-call" />
+            </IconBtn>
+            <IconBtn>
+              <VIcon icon="tabler-video" />
+            </IconBtn>
+            <IconBtn>
+              <VIcon icon="tabler-search" />
+            </IconBtn>
+          </div>
 
           <MoreBtn
             :menu-list="moreList"
             density="comfortable"
             color="undefined"
           />
-        </div> -->
+        </div>
 
+        <VDivider />
+
+        <!-- Chat log -->
         <PerfectScrollbar
           ref="chatLogPS"
           tag="ul"
           :options="{ wheelPropagation: false }"
           class="flex-grow-1"
         >
-          <!-- <ChatLog /> -->
+          <ChatLog />
         </PerfectScrollbar>
+
+        <!-- Message form -->
+        <VForm
+          class="chat-log-message-form mb-5 mx-5"
+          @submit.prevent="sendMessage"
+        >
+          <VTextField
+            :key="store.activeChat?.contact.id"
+            v-model="msg"
+            variant="solo"
+            class="chat-message-input"
+            placeholder="Type your message..."
+            density="default"
+            autofocus
+          >
+            <template #append-inner>
+              <IconBtn>
+                <VIcon icon="tabler-microphone" />
+              </IconBtn>
+
+              <IconBtn class="me-2" @click="refInputEl?.click()">
+                <VIcon icon="tabler-photo" />
+              </IconBtn>
+
+              <VBtn @click="sendMessage"> Send </VBtn>
+            </template>
+          </VTextField>
+
+          <input
+            ref="refInputEl"
+            type="file"
+            name="file"
+            accept=".jpeg,.png,.jpg,GIF"
+            hidden
+          />
+        </VForm>
       </div>
+
+      <!-- 👉 Start conversation -->
       <div v-else class="d-flex h-100 align-center justify-center flex-column">
         <VAvatar size="109" class="elevation-3 mb-6 bg-surface">
           <VIcon
@@ -207,37 +304,9 @@ const chatContentContainerBg = computed(() => {
           :class="[{ 'cursor-pointer': $vuetify.display.smAndDown }]"
           @click="startConversation"
         >
-          Summarize content
+          Start Conversation
         </p>
       </div>
-      <VForm class="chat-log-message-form mb-5" @submit.prevent="sendMessage">
-        <VTextField
-          v-model="msg"
-          :disabled="memory.isSavingMessageLoading"
-          variant="solo"
-          class="chat-message-input"
-          placeholder="Type your message..."
-          density="default"
-          autofocus
-        >
-          <template #append-inner>
-            <IconBtn
-              v-if="!memory.isSavingMessageLoading"
-              class="me-2"
-              @click="refInputEl?.click()"
-            >
-              <VIcon icon="tabler-send" />
-            </IconBtn>
-            <VProgressCircular
-              v-else
-              class="me-2"
-              size="25"
-              indeterminate
-              color="primary"
-            />
-          </template>
-        </VTextField>
-      </VForm>
     </VMain>
   </VLayout>
 </template>

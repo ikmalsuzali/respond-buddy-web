@@ -13,7 +13,11 @@ import axios from '@axios'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import { alphaDashValidator, emailValidator, requiredValidator } from '@validators'
+import {
+  alphaDashValidator,
+  emailValidator,
+  requiredValidator,
+} from '@validators'
 
 const refVForm = ref<VForm>()
 const username = ref('test123')
@@ -41,17 +45,22 @@ const errors = ref<Record<string, string | undefined>>({
 
 const register = () => {
   isLoading.value = true
-  axios.post('/v1/signup', {
-    email: email.value,
-    password: password.value,
-    confirm_password: confirmPassword.value,
-    username: username.value,
-    workspace_name: workspaceName.value,
-  })
-    .then(res => {
-      const { session: accessToken, user: userData, user_workspace: userWorkspace } = res.data
+  axios
+    .post('/v1/signup', {
+      email: email.value,
+      password: password.value,
+      confirm_password: confirmPassword.value,
+      username: username.value,
+      workspace_name: workspaceName.value,
+    })
+    .then((res) => {
+      const {
+        session: accessToken,
+        user: userData,
+        user_workspace: userWorkspace,
+      } = res.data
 
-      const userAbilities = [{ action:"manage",subject:"all" }]
+      const userAbilities = [{ action: 'manage', subject: 'all' }]
       localStorage.setItem('userAbilities', JSON.stringify(userAbilities))
       ability.update(userAbilities)
 
@@ -59,26 +68,26 @@ const register = () => {
       localStorage.setItem('accessToken', JSON.stringify(accessToken))
       localStorage.setItem('userWorkspace', JSON.stringify(userWorkspace))
 
-
       // Redirect to `to` query if exist or redirect to index route
       router.replace(route.query.to ? String(route.query.to) : '/')
-
     })
-    .catch(e => {
+    .catch((e) => {
       const error = e?.response?.data || {}
 
       // errors.value = formErrors
       console.error(e.response.data)
-    }).finally(() => {
+    })
+    .finally(() => {
       isLoading.value = false
     })
 }
 
 const imageVariant = useGenerateImageVariant(
   authV2RegisterIllustrationLight,
-  authV2RegisterIllustrationDark, authV2RegisterIllustrationBorderedLight,
+  authV2RegisterIllustrationDark,
+  authV2RegisterIllustrationBorderedLight,
   authV2RegisterIllustrationBorderedDark,
-  true,
+  true
 )
 
 const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
@@ -86,23 +95,15 @@ const authThemeMask = useGenerateImageVariant(authV2MaskLight, authV2MaskDark)
 const isPasswordVisible = ref(false)
 
 const onSubmit = () => {
-  refVForm.value?.validate()
-    .then(({ valid: isValid }) => {
-      if (isValid)
-        register()
-    })
+  refVForm.value?.validate().then(({ valid: isValid }) => {
+    if (isValid) register()
+  })
 }
 </script>
 
 <template>
-  <VRow
-    no-gutters
-    class="auth-wrapper bg-surface"
-  >
-    <VCol
-      lg="8"
-      class="d-none d-lg-flex"
-    >
+  <VRow no-gutters class="auth-wrapper bg-surface">
+    <VCol lg="8" class="d-none d-lg-flex">
       <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
         <div class="d-flex align-center justify-center w-100 h-100">
           <VImg
@@ -112,41 +113,20 @@ const onSubmit = () => {
           />
         </div>
 
-        <VImg
-          class="auth-footer-mask"
-          :src="authThemeMask"
-        />
+        <VImg class="auth-footer-mask" :src="authThemeMask" />
       </div>
     </VCol>
 
-    <VCol
-      cols="12"
-      lg="4"
-      class="d-flex align-center justify-center"
-    >
-      <VCard
-        flat
-        :max-width="500"
-        class="mt-12 mt-sm-0 pa-4"
-      >
+    <VCol cols="12" lg="4" class="d-flex align-center justify-center">
+      <VCard flat :max-width="500" class="mt-12 mt-sm-0 pa-4">
         <VCardText>
-          <VNodeRenderer
-            :nodes="themeConfig.app.logo"
-            class="mb-6"
-          />
-          <h5 class="text-h5 mb-1">
-            Future starts here 🚀
-          </h5>
-          <p class="mb-0">
-            Streamline and automate your communications
-          </p>
+          <VNodeRenderer :nodes="themeConfig.app.logo" class="mb-6" />
+          <h5 class="text-h5 mb-1">Future starts here 🚀</h5>
+          <p class="mb-0">Streamline and automate your work</p>
         </VCardText>
 
         <VCardText>
-          <VForm
-            ref="refVForm"
-            @submit.prevent="onSubmit"
-          >
+          <VForm ref="refVForm" @submit.prevent="onSubmit">
             <VRow>
               <!-- Username -->
               <VCol cols="12" class="py-1">
@@ -168,13 +148,13 @@ const onSubmit = () => {
                 />
               </VCol>
 
-              <VCol cols="12" class="py-1">
+              <!-- <VCol cols="12" class="py-1">
                 <AppTextField
                   v-model="workspaceName"
                   :rules="[requiredValidator]"
                   label="Workspace name"
                 />
-              </VCol>
+              </VCol> -->
 
               <VCol cols="12" class="py-1">
                 <AppTextField
@@ -182,7 +162,9 @@ const onSubmit = () => {
                   :rules="[requiredValidator]"
                   label="Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
-                  :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  :append-inner-icon="
+                    isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'
+                  "
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
               </VCol>
@@ -193,14 +175,15 @@ const onSubmit = () => {
                   :rules="[requiredValidator]"
                   label="Confirm Password"
                   :type="isPasswordVisible ? 'text' : 'password'"
-                  :append-inner-icon="isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'"
+                  :append-inner-icon="
+                    isPasswordVisible ? 'tabler-eye-off' : 'tabler-eye'
+                  "
                   @click:append-inner="isPasswordVisible = !isPasswordVisible"
                 />
               </VCol>
 
               <!-- password -->
               <VCol cols="12">
-
                 <div class="d-flex align-center mt-2 mb-4">
                   <VCheckbox
                     id="privacy-policy"
@@ -211,52 +194,33 @@ const onSubmit = () => {
                     <template #label>
                       <span class="me-1">
                         I agree to
-                        <a
-                          href="javascript:void(0)"
-                          class="text-primary"
-                        >privacy policy & terms</a>
+                        <a href="javascript:void(0)" class="text-primary"
+                          >privacy policy & terms</a
+                        >
                       </span>
                     </template>
                   </VCheckbox>
                 </div>
 
-                <VBtn
-                  block
-                  type="submit"
-                  :loading="isLoading"
-                >
-                  Sign up
-                </VBtn>
+                <VBtn block type="submit" :loading="isLoading"> Sign up </VBtn>
               </VCol>
 
               <!-- create account -->
-              <VCol
-                cols="12"
-                class="text-center text-base"
-              >
+              <VCol cols="12" class="text-center text-base">
                 <span>Already have an account?</span>
-                <RouterLink
-                  class="text-primary ms-2"
-                  :to="{ name: 'login' }"
-                >
+                <RouterLink class="text-primary ms-2" :to="{ name: 'login' }">
                   Sign in instead
                 </RouterLink>
               </VCol>
 
-              <VCol
-                cols="12"
-                class="d-flex align-center"
-              >
+              <VCol cols="12" class="d-flex align-center">
                 <VDivider />
                 <span class="mx-4">or</span>
                 <VDivider />
               </VCol>
 
               <!-- auth providers -->
-              <VCol
-                cols="12"
-                class="text-center"
-              >
+              <VCol cols="12" class="text-center">
                 <AuthProvider />
               </VCol>
             </VRow>
@@ -268,7 +232,7 @@ const onSubmit = () => {
 </template>
 
 <style lang="scss">
-@use "@core/scss/template/pages/page-auth.scss";
+@use '@core/scss/template/pages/page-auth.scss';
 </style>
 
 <route lang="yaml">

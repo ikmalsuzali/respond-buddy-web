@@ -4,10 +4,7 @@ import { useThemeConfig } from '@core/composable/useThemeConfig'
 
 // Components
 import Footer from '@/layouts/components/Footer.vue'
-import NavBarI18n from '@/layouts/components/NavBarI18n.vue'
-import NavBarNotifications from '@/layouts/components/NavBarNotifications.vue'
 import NavSearchBar from '@/layouts/components/NavSearchBar.vue'
-import UserProfile from '@/layouts/components/UserProfile.vue'
 
 // @layouts plugin
 import { VerticalNavLayout } from '@layouts'
@@ -27,30 +24,24 @@ const { width: windowWidth } = useWindowSize()
           class="ms-n3"
           @click="toggleVerticalOverlayNavActive(true)"
         >
-          <VIcon
-            size="26"
-            icon="tabler-menu-2"
-          />
+          <VIcon size="26" icon="tabler-menu-2" />
         </IconBtn>
 
         <NavSearchBar class="ms-lg-n3" />
 
         <VSpacer />
 
-        <NavBarI18n class="me-1" />
+        <!-- <NavBarI18n class="me-1" /> -->
         <!-- <NavbarThemeSwitcher class="me-1" /> -->
         <!-- <NavbarShortcuts class="me-1" /> -->
-        <NavBarNotifications class="me-2" />
-        <UserProfile />
+        <!-- <NavBarNotifications class="me-2" /> -->
+        <!-- <UserProfile /> -->
       </div>
     </template>
 
     <!-- 👉 Pages -->
     <RouterView v-slot="{ Component }">
-      <Transition
-        :name="appRouteTransition"
-        mode="out-in"
-      >
+      <Transition :name="appRouteTransition" mode="out-in">
         <Component :is="Component" />
       </Transition>
     </RouterView>

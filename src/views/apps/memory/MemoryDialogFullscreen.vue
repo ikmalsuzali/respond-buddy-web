@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import axios from '@axios'
+import VuePdfEmbed from 'vue-pdf-embed'
 import { useDropzone } from 'vue3-dropzone'
 import WebsiteCard from './WebsiteCard.vue'
 import { useMemoryStore } from './useMemoryStore'
@@ -10,6 +11,24 @@ import { useMemoryStore } from './useMemoryStore'
 
 // interface Prop {}
 
+const source = ref(
+  'https://respondbuddy.sfo3.cdn.digitaloceanspaces.com/Pride-and-Prejudice.pdf'
+)
+const messages = [
+  {
+    id: 1,
+    text: 'Hello! How can I assist you?',
+    isBot: true,
+    timestamp: '09:00 AM',
+  },
+  {
+    id: 2,
+    text: 'I need help with a programming problem.',
+    isBot: false,
+    timestamp: '09:05 AM',
+  },
+  // Add more messages as needed
+]
 const memoryStore = useMemoryStore()
 // const props = defineProps<Prop>()
 // const emit = defineEmits<Emit>()
@@ -39,17 +58,24 @@ const onDrop = (acceptFiles: any, rejectReasons: any) => {
 const saveFiles = (savingFiles) => {
   const formData = new FormData() // pass data as a form
   for (var i = 0; i < savingFiles.length; i++) {
+    const config = {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent: any) => {
+        const uploadedBytes = progressEvent.loaded
+        const totalBytes = progressEvent.total
+        const uploadPercentage = (uploadedBytes / totalBytes) * 100
+        console.log(`Uploading: ${uploadPercentage.toFixed(2)}%`)
+      },
+    }
     const savedFile = savingFiles[i]
     // append files as array to the form, feel free to change the array name
     formData.append('file', savedFile.file)
 
     // post the formData to your backend where storage is processed. In the backend, you will need to loop through the array and save each file through the loop.
     axios
-      .post('/v1/file/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      .post('/v1/file/upload', formData, config)
       .then((response) => {
         const foundFileIndex = files.value.findIndex(
           (_file) => _file.id == savedFile?.id
@@ -270,13 +296,7 @@ const { getRootProps, getInputProps, ...rest } = useDropzone({
           value="upload"
           >Upload</VTab
         >
-        <VTab
-          v-if="
-            memoryStore.selectedMemoryType?.fields?.types?.includes('input')
-          "
-          value="input"
-          >Content</VTab
-        >
+        <VTab value="analyze">Analyze</VTab>
         <VTab
           v-if="
             memoryStore.selectedMemoryType?.fields?.types?.includes(
@@ -387,6 +407,38 @@ const { getRootProps, getInputProps, ...rest } = useDropzone({
             </VCard>
           </div>
         </VWindow>
+        <VWindow v-if="currentTab == 'analyze'">
+          <v-container fluid>
+            <v-row>
+              <v-col cols="6">
+                <div class="pdf-container">
+                  <vue-pdf-embed :source="source" />
+                </div>
+              </v-col>
+              <!-- Left Column - Chat Messages -->
+              <v-col cols="6">
+                <div class="chat-container">
+                  <div
+                    v-for="message in messages"
+                    :key="message.id"
+                    class="chat-message"
+                  >
+                    <v-avatar v-if="message.isBot" class="avatar">
+                      <v-icon>mdi-robot</v-icon>
+                    </v-avatar>
+                    <div
+                      class="bubble"
+                      :class="{ 'user-bubble': !message.isBot }"
+                    >
+                      <p class="message-text">{{ message.text }}</p>
+                      <div class="timestamp">{{ message.timestamp }}</div>
+                    </div>
+                  </div>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+        </VWindow>
         <VWindow v-if="currentTab === 'input'">
           <div class="d-flex justify-center flex-column">
             <VCard
@@ -461,5 +513,14 @@ const { getRootProps, getInputProps, ...rest } = useDropzone({
   &:focus {
     background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%232e44ff' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
   }
+}
+
+.left-container {
+  overflow-y: auto; /* Add scroll to the left container */
+  max-height: 400px; /* Set a maximum height to control the scrolling area */
+}
+
+.VRow.left-container {
+  height: 100%;
 }
 </style>

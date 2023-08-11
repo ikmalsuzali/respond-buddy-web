@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
-import { useChat } from './useChat'
 import type { ChatContact as TypeChatContact } from '@/@fake-db/types'
-import ChatContact from '@/views/apps/chat/ChatContact.vue'
 import { useChatStore } from '@/views/apps/chat/useChatStore'
+import { useChat } from './useChat'
 
 const props = defineProps<{
   search: string
   isDrawerOpen: boolean
 }>()
+
+const source = ref(
+  'https://respondbuddy.sfo3.cdn.digitaloceanspaces.com/Pride-and-Prejudice.pdf'
+)
 
 defineEmits<{
   (e: 'openChatOfContact', id: TypeChatContact['id']): void
@@ -24,53 +26,53 @@ const store = useChatStore()
 
 <template>
   <!-- 👉 Chat list header -->
-  <div
-    v-if="store.profileUser"
-    class="chat-list-header"
-  >
-    <VBadge
-      dot
-      location="bottom right"
-      offset-x="3"
-      offset-y="3"
-      :color="resolveAvatarBadgeVariant(store.profileUser.status)"
-      bordered
-    >
-      <VAvatar
-        size="38"
-        class="cursor-pointer"
-        @click="$emit('showUserProfile')"
-      >
-        <VImg
-          :src="store.profileUser.avatar"
-          alt="John Doe"
-        />
-      </VAvatar>
-    </VBadge>
 
-    <AppTextField
-      v-model="search"
-      placeholder="Search..."
-      class="ms-4 me-1 chat-list-search"
-    >
-      <template #prepend-inner>
-        <VIcon
-          size="22"
-          icon="tabler-search"
+  <div class="chat-list-header"></div>
+  <!-- <IconBtn v-if="$vuetify.display.smAndDown" @click="$emit('close')">
+      <VIcon icon="tabler-x" class="text-medium-emphasis" />
+    </IconBtn> -->
+  <div class="d-flex" style="justify-content: space-between">
+    <div class="d-flex gap-2" style="align-items: center; height: 40px">
+      <IconBtn>
+        <VIcon size="24" icon="tabler-arrow-badge-up" />
+      </IconBtn>
+      <div class="d-flex">
+        <input
+          style="width: 40px"
+          variant="solo"
+          class="chat-message-input text-right pe-1"
+          placeholder="Page"
+          density="default"
+          autofocus
         />
-      </template>
-    </AppTextField>
-
-    <IconBtn
-      v-if="$vuetify.display.smAndDown"
-      @click="$emit('close')"
-    >
-      <VIcon
-        icon="tabler-x"
-        class="text-medium-emphasis"
-      />
-    </IconBtn>
+        <div style="align-self: center">/ 100</div>
+      </div>
+      <IconBtn>
+        <VIcon size="24" icon="tabler-arrow-badge-down" />
+      </IconBtn>
+    </div>
+    <div class="d-flex gap-2">
+      <IconBtn>
+        <VIcon size="20" icon="tabler-plus" />
+      </IconBtn>
+      <div style="align-self: center; font-size: 18px">80%</div>
+      <IconBtn>
+        <VIcon size="20" icon="tabler-minus" />
+      </IconBtn>
+    </div>
+    <div class="d-flex">
+      <IconBtn>
+        <VIcon size="24" icon="tabler-printer" />
+      </IconBtn>
+      <IconBtn>
+        <VIcon size="24" icon="tabler-maximize" />
+      </IconBtn>
+      <IconBtn>
+        <VIcon size="24" icon="tabler-dots-vertical" />
+      </IconBtn>
+    </div>
   </div>
+
   <VDivider />
 
   <PerfectScrollbar
@@ -78,38 +80,7 @@ const store = useChatStore()
     class="d-flex flex-column gap-y-1 chat-contacts-list px-3 list-none"
     :options="{ wheelPropagation: false }"
   >
-    <li>
-      <span class="chat-contact-header d-block text-primary text-xl font-weight-medium">Chats</span>
-    </li>
-
-    <ChatContact
-      v-for="contact in store.chatsContacts"
-      :key="`chat-${contact.id}`"
-      :user="contact"
-      is-chat-contact
-      @click="$emit('openChatOfContact', contact.id)"
-    />
-
-    <span
-      v-show="!store.chatsContacts.length"
-      class="no-chat-items-text text-disabled"
-    >No chats found</span>
-
-    <li>
-      <span class="chat-contact-header d-block text-primary text-xl font-weight-medium">Contacts</span>
-    </li>
-
-    <ChatContact
-      v-for="contact in store.contacts"
-      :key="`chat-${contact.id}`"
-      :user="contact"
-      @click="$emit('openChatOfContact', contact.id)"
-    />
-
-    <span
-      v-show="!store.contacts.length"
-      class="no-chat-items-text text-disabled"
-    >No contacts found</span>
+    <!-- <vue-pdf-embed :source="source" :disable-text-layer="false" /> -->
   </PerfectScrollbar>
 </template>
 

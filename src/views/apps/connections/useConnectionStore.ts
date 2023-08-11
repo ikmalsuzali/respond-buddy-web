@@ -8,10 +8,11 @@ export const useConnectionStore = defineStore('ConnectionStore', {
     isWorkspaceIntegrationsLoading: false,
     workspaceIntegrations: [],
     selectedWorkspaceIntegration: {},
-    selectedWorkspace: {
+    selectedIntegration: {
       id: '',
       name: '',
       meta_template: [],
+      icon: '',
     },
     websites: [],
     isWorkspaceIntegrationDialogOpen: false,
@@ -55,6 +56,32 @@ export const useConnectionStore = defineStore('ConnectionStore', {
     toggleWorkspaceIntegrationDialog() {
       this.isWorkspaceIntegrationDialogOpen =
         !this.isWorkspaceIntegrationDialogOpen
+    },
+
+    setSelectedIntegration(integration: any) {
+      this.toggleWorkspaceIntegrationDialog()
+      this.selectedIntegration = integration
+    },
+
+    submitWorkspaceIntegration() {
+      if (this.selectedIntegration.name === 'Slack') {
+        // Add redirect url
+        const workspaceId = JSON.parse(
+          localStorage.getItem('userWorkspace') || ''
+        )?.workspace
+        const userId = JSON.parse(
+          localStorage.getItem('userWorkspace') || ''
+        )?.user
+        const redirectUrl = `${
+          import.meta.env.VITE_APP_API_URL
+        }v1/slack/oauth/callback?workspace_id=${workspaceId}&user_id=${userId}&integration_id=${
+          this.selectedIntegration.id
+        }`
+        const callbackUrl = `${
+          this.selectedIntegration.meta_template?.shareable_url?.default
+        }&redirect_uri=${encodeURIComponent(redirectUrl)}`
+        window.open(`${callbackUrl}`, '_blank')
+      }
     },
   },
 })

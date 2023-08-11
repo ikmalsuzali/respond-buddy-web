@@ -1,7 +1,6 @@
 import axios from '@axios'
 import { defineStore } from 'pinia'
 
-
 export const useMemoryStore = defineStore('MemoryStore', {
   state: () => ({
     memories: [],
@@ -11,8 +10,10 @@ export const useMemoryStore = defineStore('MemoryStore', {
       name: '',
       fields: [],
     },
+    selectedMemoryChat: {},
+    isSavingMessageLoading: false,
     selectedMemory: {
-      id: '',
+      id: '26e0a59a-e17d-4ee0-ab95-de0c0d57b3b3',
     },
     websites: [],
   }),
@@ -271,6 +272,72 @@ export const useMemoryStore = defineStore('MemoryStore', {
     deleteWebsite(website: any) {
       const websites = this.websites.filter((w: any) => w.url !== website.url)
       this.websites = websites
+    },
+
+    pushMesageToChat({ storeId, message }: { storeId: string; message: any }) {
+      let messages = this.selectedMemoryChat[storeId] || []
+      messages.push({
+        customer: 'id',
+        content: message,
+        created_at: new Date(),
+      })
+      this.selectedMemoryChat[storeId] = messages
+    },
+
+    async saveMessage({
+      storeId,
+      message,
+    }: {
+      storeId: string
+      message: string
+    }) {
+      try {
+        this.isSavingMessageLoading = true
+        let messages = this.selectedMemoryChat[storeId] || []
+
+        const response = await axios.post('/v1/message', {
+          store_id: storeId,
+          message,
+        })
+
+        if (response && response.data) {
+          let responseData = response.data?.data
+          console.log(response.data)
+          // User Message
+
+          // Bot Message
+          messages.push({
+            customer: null,
+            content: responseData.message,
+            created_at: new Date(),
+          })
+
+          this.selectedMemoryChat[storeId] = messages
+          // this.selectedMemoryChat = {
+          //   ...this.selectedMemoryChat,
+          //   [storeId]: messages.push(response.data.message),
+          // }
+        }
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.isSavingMessageLoading = false
+      }
+    },
+
+    async getMessages({ storeId }: { storeId: string }) {
+      try {
+        const response = await axios.get(`/v1/message/${storeId}`)
+
+        if (response && response.data) {
+          this.selectedMemoryChat = {
+            ...this.selectedMemoryChat,
+            [storeId]: response.data.messages,
+          }
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 })

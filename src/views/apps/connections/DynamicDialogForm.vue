@@ -2,6 +2,32 @@
 import { useConnectionStore } from '@/views/apps/connections/useConnectionStore'
 
 const connectionStore = useConnectionStore()
+
+const authUrl = () => {
+  return connectionStore.selectedIntegration?.meta_template?.shareable_url
+    ?.default
+}
+
+const convertUnderscoreToCapitalizedText = (text: string) => {
+  return text
+    .split('_')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
+const filterByIsHidden = () => {
+  const filteredObj = {}
+
+  for (const [key, value] of Object.entries(
+    connectionStore.selectedIntegration?.meta_template
+  )) {
+    if (value.is_hidden === 'false') {
+      filteredObj[key] = value
+    }
+  }
+
+  return filteredObj
+}
 </script>
 
 <template>
@@ -9,32 +35,27 @@ const connectionStore = useConnectionStore()
     v-model="connectionStore.isWorkspaceIntegrationDialogOpen"
     max-width="600"
   >
-    <!-- Dialog Activator -->
-    <template #activator="{ props }">
-      <VBtn v-bind="props">Open Dialog</VBtn>
-    </template>
-
     <!-- Dialog close btn -->
     <DialogCloseBtn
       @click="connectionStore.toggleWorkspaceIntegrationDialog()"
     />
 
     <!-- Dialog Content -->
-    <VCard :title="connectionStore.selectedWorkspace?.name">
+    <VCard :title="connectionStore.selectedIntegration?.name">
       <VCardText>
         <VRow>
           <VCol
-            v-for="(field, fieldName) in connectionStore.selectedWorkspace
-              ?.meta_template"
+            v-for="(field, fieldName) in filterByIsHidden()"
             cols="12"
             sm="6"
-            md="4"
+            :md="filterByIsHidden.length > 1 ? '4' : '12'"
           >
-            <AppTextField :label="fieldName" />
+            <AppTextField
+              :label="convertUnderscoreToCapitalizedText(fieldName)"
+            />
           </VCol>
         </VRow>
       </VCardText>
-
       <VCardText class="d-flex justify-end flex-wrap gap-3">
         <VBtn
           variant="tonal"
@@ -43,8 +64,8 @@ const connectionStore = useConnectionStore()
         >
           Close
         </VBtn>
-        <VBtn @click="connectionStore.toggleWorkspaceIntegrationDialog()">
-          Save
+        <VBtn @click="connectionStore.submitWorkspaceIntegration()">
+          Integrate
         </VBtn>
       </VCardText>
     </VCard>
