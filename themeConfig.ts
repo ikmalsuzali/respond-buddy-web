@@ -25,15 +25,15 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     contentLayoutNav: AppContentLayoutNav.Vertical,
     overlayNavFromBreakpoint: breakpointsVuetify.md + 16, // 16 for scrollbar. Docs: https://next.vuetifyjs.com/en/features/display-and-platform/
     enableI18n: true,
-    theme: 'dark',
+    theme: 'light',
     isRtl: false,
-    skin: Skins.Bordered,
+    skin: Skins.Default,
     routeTransition: RouteTransitions.Fade,
     iconRenderer: VIcon,
   },
   navbar: {
     type: NavbarType.Static,
-    navbarBlur: false,
+    navbarBlur: true,
   },
   footer: { type: FooterType.Hidden },
   verticalNav: {

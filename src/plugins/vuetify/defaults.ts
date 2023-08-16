@@ -166,7 +166,7 @@ export default {
   VTimeline: {
     lineThickness: 1,
   },
-
+  VDataIterator: {},
   VDataTable: {
     VDataTableFooter: {
       VBtn: {

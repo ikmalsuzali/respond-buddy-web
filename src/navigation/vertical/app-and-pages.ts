@@ -30,9 +30,9 @@ export default [
   //   to: 'apps-connections',
   // },
   {
-    title: 'Context tags',
+    title: 'Templates',
     icon: { icon: 'tabler-tags' },
-    to: 'apps-contexttags',
+    to: 'apps-tags',
   },
   {
     title: 'Account',

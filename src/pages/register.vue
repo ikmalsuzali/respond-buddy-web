@@ -103,17 +103,40 @@ const onSubmit = () => {
 
 <template>
   <VRow no-gutters class="auth-wrapper bg-surface">
-    <VCol lg="8" class="d-none d-lg-flex">
-      <div class="position-relative bg-background rounded-lg w-100 ma-8 me-0">
-        <div class="d-flex align-center justify-center w-100 h-100">
-          <VImg
-            max-width="441"
-            :src="imageVariant"
-            class="auth-illustration mt-16 mb-2"
-          />
+    <VCol
+      lg="8"
+      class="d-none d-lg-flex"
+      style="background-image: linear-gradient(to top, #e0fff2 44%, #fffea8)"
+    >
+      <div class="position-relative rounded-lg w-100 ma-8 me-0">
+        <div class="d-flex align-center justify-center w-full h-100">
+          <div class="w-full">
+            <div class="light text-4xl my-2 text-center">I want to...</div>
+            <div class="flex wrap space-x-2 text-center">
+              <VChip
+                class="ma-2"
+                v-for="(item, index) in [
+                  { name: 'Summarize' },
+                  { name: 'Respond' },
+                  { name: 'Translate to Spanish' },
+                  { name: 'Store' },
+                  { name: 'Recall' },
+                  { name: 'Simplify' },
+                  { name: 'Translate to Chinese' },
+                  { name: 'Send email' },
+                  { name: 'Custom Prompts' },
+                ]"
+                :key="index"
+                label
+                size="x-large"
+                color="success"
+                >{{ item.name }}</VChip
+              >
+            </div>
+          </div>
         </div>
 
-        <VImg class="auth-footer-mask" :src="authThemeMask" />
+        <VImg :src="authThemeMask" class="auth-footer-mask" />
       </div>
     </VCol>
 

@@ -2,7 +2,7 @@ import { resolveVuetifyTheme } from '@core/utils/vuetify'
 import { themeConfig } from '@themeConfig'
 import type { VuetifyOptions } from 'vuetify'
 
-export const staticPrimaryColor = '#03DAC6'
+export const staticPrimaryColor = '##25dcdc'
 
 const theme: VuetifyOptions['theme'] = {
   defaultTheme: resolveVuetifyTheme(),
@@ -14,17 +14,17 @@ const theme: VuetifyOptions['theme'] = {
           localStorage.getItem(
             `${themeConfig.app.title}-lightThemePrimaryColor`
           ) || staticPrimaryColor,
-        'on-primary': '#fff',
+        'on-primary': '#424242',
         secondary: '#A8AAAE',
         'on-secondary': '#fff',
-        success: '#28C76F',
+        success: '#258cdc',
         'on-success': '#fff',
         info: '#00CFE8',
         'on-info': '#fff',
         warning: '#FF9F43',
         'on-warning': '#fff',
         error: '#EA5455',
-        background: '#F8F7FA',
+        background: '#e0fff2',
         'on-background': '#2F2B3D',
         'on-surface': '#2F2B3D',
         'grey-50': '#FAFAFA',
@@ -38,7 +38,7 @@ const theme: VuetifyOptions['theme'] = {
         'grey-800': '#424242',
         'grey-900': '#212121',
         'perfect-scrollbar-thumb': '#DBDADE',
-        'skin-bordered-background': '#fff',
+        'skin-bordered-background': '#e0fff2',
         'skin-bordered-surface': '#fff',
       },
 
