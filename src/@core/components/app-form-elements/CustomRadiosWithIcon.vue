@@ -23,39 +23,34 @@ watch(selectedOption, () => {
 </script>
 
 <template>
-  <VRadioGroup
-    v-if="props.radioContent"
-    v-model="selectedOption"
-  >
-    <VRow>
+  <VRadioGroup v-if="props.radioContent" v-model="selectedOption">
+    <VRow dense>
       <VCol
         v-for="item in props.radioContent"
         :key="item.title"
         v-bind="gridColumn"
       >
         <VLabel
-          class="custom-input custom-radio-icon rounded cursor-pointer"
+          class="custom-input rounded cursor-pointer"
           :class="selectedOption === item.value ? 'active' : ''"
+          style="width: 100%; padding: 0.5rem 0.75rem"
         >
           <slot :item="item">
-            <div class="d-flex flex-column align-center text-center gap-2">
-              <VIcon
-                v-bind="item.icon"
-                class="text-high-emphasis"
-              />
-              <h6 class="cr-title text-base">
-                {{ item.title }}
-              </h6>
-
-              <p class="text-sm mb-0 clamp-text">
-                {{ item.desc }}
-              </p>
+            <div class="d-flex gap-2">
+              <div>
+                <VRadio :value="item.value" />
+              </div>
+              <VIcon v-bind="item.icon" class="text-high-emphasis" />
+              <div>
+                <h6 class="text-base" style="">
+                  {{ item.title }}
+                </h6>
+                <p class="text-sm mb-0 clamp-text">
+                  {{ item.desc }}
+                </p>
+              </div>
             </div>
           </slot>
-
-          <div>
-            <VRadio :value="item.value" />
-          </div>
         </VLabel>
       </VCol>
     </VRow>

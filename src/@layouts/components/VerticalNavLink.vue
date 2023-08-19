@@ -20,11 +20,17 @@ const hideTitleAndBadge = isVerticalNavMini(windowWidth)
     v-if="can(item.action, item.subject)"
     class="nav-link"
     :class="{ disabled: item.disable }"
+    style="margin-bottom: 5px"
   >
     <Component
       :is="item.to ? 'RouterLink' : 'a'"
       v-bind="getComputedNavLinkToProp(item)"
-      :class="{ 'router-link-active router-link-exact-active': isNavLinkActive(item, $router) }"
+      :class="{
+        'router-link-active router-link-exact-active': isNavLinkActive(
+          item,
+          $router
+        ),
+      }"
     >
       <Component
         :is="config.app.iconRenderer || 'div'"

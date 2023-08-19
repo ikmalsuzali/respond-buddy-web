@@ -30,56 +30,48 @@ const userData = {
 <template>
   <VRow>
     <!-- 👉 Share Project Dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-file"
-            />
+            <VIcon size="34" icon="tabler-file" />
           </template>
           <VCardTitle>Share Project</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Quickly collect the credit card details, built in input mask and form validation support.
+            Quickly collect the credit card details, built in input mask and
+            form validation support.
           </p>
 
-          <VBtn @click="isShareProjectDialogVisible = !isShareProjectDialogVisible">
+          <VBtn
+            @click="isShareProjectDialogVisible = !isShareProjectDialogVisible"
+          >
             Show
           </VBtn>
         </VCardText>
 
-        <ShareProjectDialog v-model:isDialogVisible="isShareProjectDialogVisible" />
+        <ShareProjectDialog
+          v-model:isDialogVisible="isShareProjectDialogVisible"
+        />
       </VCard>
     </VCol>
 
     <!-- 👉 Add New Card Dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-credit-card"
-            />
+            <VIcon size="34" icon="tabler-credit-card" />
           </template>
           <VCardTitle>Add New Card</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Quickly collect the credit card details, built in input mask and form validation support.
+            Quickly collect the credit card details, built in input mask and
+            form validation support.
           </p>
 
           <VBtn @click="isCardAddDialogVisible = !isCardAddDialogVisible">
@@ -92,151 +84,131 @@ const userData = {
     </VCol>
 
     <!-- 👉 Pricing Dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-currency-dollar"
-            />
+            <VIcon size="34" icon="tabler-currency-dollar" />
           </template>
           <VCardTitle>Pricing</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Elegant pricing options dialog popup example, easy to use in any page.
+            Elegant pricing options dialog popup example, easy to use in any
+            page.
           </p>
 
-          <VBtn @click="isPricingPlanDialogVisible = !isPricingPlanDialogVisible">
+          <VBtn
+            @click="isPricingPlanDialogVisible = !isPricingPlanDialogVisible"
+          >
             Show
           </VBtn>
         </VCardText>
 
         <!-- 👉 plan and pricing dialog -->
-        <PricingPlanDialog v-model:is-dialog-visible="isPricingPlanDialogVisible" />
+        <PricingPlanDialog
+          v-model:is-dialog-visible="isPricingPlanDialogVisible"
+        />
       </VCard>
     </VCol>
 
     <!-- 👉 Refer And Earn Dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-gift"
-            />
+            <VIcon size="34" icon="tabler-gift" />
           </template>
           <VCardTitle>Refer & Earn</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Use Refer & Earn modal to encourage your exiting customers refer their friends & colleague.
+            Use Refer & Earn modal to encourage your exiting customers refer
+            their friends & colleague.
           </p>
 
-          <VBtn @click="isReferAndEarnDialogVisible = !isReferAndEarnDialogVisible">
+          <VBtn
+            @click="isReferAndEarnDialogVisible = !isReferAndEarnDialogVisible"
+          >
             Show
           </VBtn>
         </VCardText>
 
         <!-- 👉 plan and pricing dialog -->
-        <ReferAndEarnDialog v-model:is-dialog-visible="isReferAndEarnDialogVisible" />
+        <ReferAndEarnDialog
+          v-model:is-dialog-visible="isReferAndEarnDialogVisible"
+        />
       </VCard>
     </VCol>
 
     <!-- 👉 Add New Address Dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-home"
-            />
+            <VIcon size="34" icon="tabler-home" />
           </template>
           <VCardTitle>Add New Address</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Ready to use form to collect user address data with validation and custom input support.
+            Ready to use form to collect user address data with validation and
+            custom input support.
           </p>
 
-          <VBtn @click="isEditAddressDialogVisible = !isEditAddressDialogVisible">
+          <VBtn
+            @click="isEditAddressDialogVisible = !isEditAddressDialogVisible"
+          >
             Show
           </VBtn>
         </VCardText>
 
         <!-- 👉 Edit Address dialog -->
-        <AddEditAddressDialog v-model:isDialogVisible="isEditAddressDialogVisible" />
+        <AddEditAddressDialog
+          v-model:isDialogVisible="isEditAddressDialogVisible"
+        />
       </VCard>
     </VCol>
 
     <!-- 👉 Create app dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-box"
-            />
+            <VIcon size="34" icon="tabler-box" />
           </template>
           <VCardTitle>Create App</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Provide application data with this form to create the app dialog popup example, easy to use in any page.
+            Provide application data with this form to create the app dialog
+            popup example, easy to use in any page.
           </p>
 
-          <VBtn @click="isCreateAppVisible = !isCreateAppVisible">
-            Show
-          </VBtn>
+          <VBtn @click="isCreateAppVisible = !isCreateAppVisible"> Show </VBtn>
         </VCardText>
       </VCard>
       <CreateAppDialog v-model:is-dialog-visible="isCreateAppVisible" />
     </VCol>
 
     <!-- 👉 Two Factor Auth Dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-lock"
-            />
+            <VIcon size="34" icon="tabler-lock" />
           </template>
           <VCardTitle>Two Factor Auth</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Enhance your application security by enabling two factor authentication.
+            Enhance your application security by enabling two factor
+            authentication.
           </p>
 
           <VBtn @click="isTwoFactorDialogOpen = !isTwoFactorDialogOpen">
@@ -251,28 +223,24 @@ const userData = {
     </VCol>
 
     <!-- 👉 Edit User Info Dialog -->
-    <VCol
-      cols="12"
-      sm="6"
-      md="4"
-    >
+    <VCol cols="12" sm="6" md="4">
       <VCard class="text-high-emphasis text-center">
         <VCardItem class="d-flex flex-column gap-2">
           <template #prepend>
-            <VIcon
-              size="34"
-              icon="tabler-lock"
-            />
+            <VIcon size="34" icon="tabler-lock" />
           </template>
           <VCardTitle>Edit User Info</VCardTitle>
         </VCardItem>
 
         <VCardText>
           <p class="text-base clamp-text">
-            Enhance your application security by enabling two factor authentication.
+            Enhance your application security by enabling two factor
+            authentication.
           </p>
 
-          <VBtn @click="isUserInfoEditDialogVisible = !isUserInfoEditDialogVisible">
+          <VBtn
+            @click="isUserInfoEditDialogVisible = !isUserInfoEditDialogVisible"
+          >
             Show
           </VBtn>
         </VCardText>

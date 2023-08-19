@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CrudModal from '../../../views/apps/tags/CrudModal.vue'
 import TagList from '../../../views/apps/tags/TagList.vue'
 
 // import MemoryList from '@/views/apps/memory/MemoryList.vue'
@@ -14,7 +15,7 @@ import TagList from '../../../views/apps/tags/TagList.vue'
   <div>
     <VRow>
       <VCol cols="12">
-        <h4 class="text-h4 mb-6">Templates</h4>
+        <p class="text-h2 font-weight-thin">Templates</p>
         <p class="mb-0">
           Tags give immediate insight into what your content is all about.
           Whether you're sorting through articles, photos, or videos, these tags
@@ -28,5 +29,6 @@ import TagList from '../../../views/apps/tags/TagList.vue'
         <TagList />
       </VCol>
     </VRow>
+    <CrudModal :is-dialog-visible="true" />
   </div>
 </template>

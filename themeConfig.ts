@@ -23,7 +23,7 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     }),
     contentWidth: ContentWidth.Fluid,
     contentLayoutNav: AppContentLayoutNav.Vertical,
-    overlayNavFromBreakpoint: breakpointsVuetify.md + 16, // 16 for scrollbar. Docs: https://next.vuetifyjs.com/en/features/display-and-platform/
+    overlayNavFromBreakpoint: breakpointsVuetify.xs + 16, // 16 for scrollbar. Docs: https://next.vuetifyjs.com/en/features/display-and-platform/
     enableI18n: true,
     theme: 'light',
     isRtl: false,
@@ -32,7 +32,7 @@ export const { themeConfig, layoutConfig } = defineThemeConfig({
     iconRenderer: VIcon,
   },
   navbar: {
-    type: NavbarType.Static,
+    type: NavbarType.Hidden,
     navbarBlur: true,
   },
   footer: { type: FooterType.Hidden },

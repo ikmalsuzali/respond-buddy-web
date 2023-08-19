@@ -35,7 +35,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits<Emit>()
 
-const billingAddress = ref<BillingAddress>(structuredClone(toRaw(props.billingAddress)))
+const billingAddress = ref<BillingAddress>(
+  structuredClone(toRaw(props.billingAddress))
+)
 
 const resetForm = () => {
   emit('update:isDialogVisible', false)
@@ -67,17 +69,14 @@ const addressTypes = [
 
 <template>
   <VDialog
-    :width="$vuetify.display.smAndDown ? 'auto' : 610 "
+    :width="$vuetify.display.smAndDown ? 'auto' : 610"
     :model-value="props.isDialogVisible"
-    @update:model-value="val => $emit('update:isDialogVisible', val)"
+    @update:model-value="(val) => $emit('update:isDialogVisible', val)"
   >
     <!-- 👉 Dialog close btn -->
     <DialogCloseBtn @click="$emit('update:isDialogVisible', false)" />
 
-    <VCard
-      v-if="props.billingAddress"
-      class="pa-sm-8 pa-5"
-    >
+    <VCard v-if="props.billingAddress" class="pa-sm-8 pa-5">
       <!-- 👉 Title -->
       <VCardItem>
         <VCardTitle class="text-h4 text-center">
@@ -88,10 +87,7 @@ const addressTypes = [
       <VCardText>
         <!-- 👉 Subtitle -->
         <VCardSubtitle class="text-center mb-6">
-          <span class="text-base">
-
-            Add new address for express delivery
-          </span>
+          <span class="text-base"> Add new address for express delivery </span>
         </VCardSubtitle>
 
         <div class="d-flex">
@@ -103,16 +99,10 @@ const addressTypes = [
         </div>
 
         <!-- 👉 Form -->
-        <VForm
-          class="mt-4"
-          @submit.prevent="onFormSubmit"
-        >
+        <VForm class="mt-4" @submit.prevent="onFormSubmit">
           <VRow>
             <!-- 👉 Company Name -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.companyName"
                 label="Company Name"
@@ -120,10 +110,7 @@ const addressTypes = [
             </VCol>
 
             <!-- 👉 Email -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.billingEmail"
                 label="Email"
@@ -131,21 +118,12 @@ const addressTypes = [
             </VCol>
 
             <!-- 👉 Tax ID -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppTextField
-                v-model="billingAddress.taxID"
-                label="Tax ID"
-              />
+            <VCol cols="12" md="6">
+              <AppTextField v-model="billingAddress.taxID" label="Tax ID" />
             </VCol>
 
             <!-- 👉 VAT Number -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.vatNumber"
                 label="VAT Number"
@@ -162,43 +140,22 @@ const addressTypes = [
             </VCol>
 
             <!-- 👉 Contact -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppTextField
-                v-model="billingAddress.contact"
-                label="Contact"
-              />
+            <VCol cols="12" md="6">
+              <AppTextField v-model="billingAddress.contact" label="Contact" />
             </VCol>
 
             <!-- 👉 Country -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppTextField
-                v-model="billingAddress.country"
-                label="Country"
-              />
+            <VCol cols="12" md="6">
+              <AppTextField v-model="billingAddress.country" label="Country" />
             </VCol>
 
             <!-- 👉 State -->
-            <VCol
-              cols="12"
-              md="6"
-            >
-              <AppTextField
-                v-model="billingAddress.state"
-                label="State"
-              />
+            <VCol cols="12" md="6">
+              <AppTextField v-model="billingAddress.state" label="State" />
             </VCol>
 
             <!-- 👉 Zip Code -->
-            <VCol
-              cols="12"
-              md="6"
-            >
+            <VCol cols="12" md="6">
               <AppTextField
                 v-model="billingAddress.zipCode"
                 label="Zip Code"
@@ -207,22 +164,10 @@ const addressTypes = [
             </VCol>
 
             <!-- 👉 Submit and Cancel button -->
-            <VCol
-              cols="12"
-              class="text-center"
-            >
-              <VBtn
-                type="submit"
-                class="me-3"
-              >
-                submit
-              </VBtn>
+            <VCol cols="12" class="text-center">
+              <VBtn type="submit" class="me-3"> submit </VBtn>
 
-              <VBtn
-                variant="tonal"
-                color="secondary"
-                @click="resetForm"
-              >
+              <VBtn variant="tonal" color="secondary" @click="resetForm">
                 Cancel
               </VBtn>
             </VCol>
