@@ -30,12 +30,9 @@ export const useAccountStore = defineStore('AccountStore', {
   },
   actions: {
     getSubscriptionItem() {
+      if (!localStorage.getItem('accessToken')) return
       const subscription = JSON.parse(
         localStorage.getItem('subscription') || '{}'
-      )
-      console.log(
-        '🚀 ~ file: useAccountStore.ts:37 ~ getSubscriptionItem ~ subscription:',
-        subscription
       )
       this.subscriptionDetails = this.deserializeSubscriptionItem(subscription)
       return new Promise((resolve) => {
@@ -81,6 +78,7 @@ export const useAccountStore = defineStore('AccountStore', {
       }
     },
     getItem() {
+      if (!localStorage.getItem('accessToken')) return
       const userData = JSON.parse(localStorage.getItem('userData') || '{}')
       if (userData.user_id || userData.id) {
         this.accountDetails = this.deserializeItem(userData)

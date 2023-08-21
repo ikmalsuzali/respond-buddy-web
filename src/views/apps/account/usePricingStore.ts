@@ -44,5 +44,17 @@ export const usePricingStore = defineStore('PricingStore', {
         })
       })
     },
+    checkoutPlan(planId: string) {
+      return new Promise((resolve) => {
+        const response = axios
+          .post('/v1/checkout-session', {
+            plan_id: planId,
+          })
+          .then((response) => {
+            window.location.href = response.data.stripe_url
+            resolve(response.data)
+          })
+      })
+    },
   },
 })

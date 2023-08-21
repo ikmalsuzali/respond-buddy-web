@@ -16,6 +16,12 @@ const currentPricingPlanLocal = computed(() => {
     : pricingPlansMonthlyLocal.value
 })
 
+const onCheckoutClick = async (plan: any) => {
+  console.log(plan)
+  if (!plan || !plan.stripe_price_id) return
+  const response = await pricingStore.checkoutPlan(plan?.stripe_price_id)
+}
+
 watch(
   () => pricingStore.pricingPlans,
   () => {
@@ -123,13 +129,14 @@ interface Pricing {
         <!-- 👉 Plan actions -->
         <VCardActions>
           <VBtn
+            @click="onCheckoutClick(plan)"
             block
             :color="
               accountStore.getCurrentSubscriptionProductId === plan.id
                 ? 'success'
                 : 'primary'
             "
-            :variant="plan.isPopular ? 'elevated' : 'tonal'"
+            :variant="plan?.isPopular ? 'elevated' : 'tonal'"
           >
             {{
               accountStore.getCurrentSubscriptionProductId === plan.id
