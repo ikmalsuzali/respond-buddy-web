@@ -1,78 +1,27 @@
 <script lang="ts" setup>
-// Images
-import mastercard from '@images/icons/payments/mastercard.png'
-import visa from '@images/icons/payments/visa.png'
+import { useAccountStore } from '@/views/apps/account/useAccountStore.ts'
+import { useDateFormat } from '@vueuse/core'
 
-interface CardDetails {
-  name: string
-  number: string
-  expiry: string
-  isPrimary: boolean
-  type: string
-  cvv: string
-  image: string
-}
-const selectedPaymentMethod = ref('credit-debit-atm-card')
+// Images
+const accountStore = useAccountStore()
+accountStore.getSubscriptionItem()
+
+const subscriptionLocal = ref(accountStore.subscriptionDetails)
+const formattedDate = useDateFormat(
+  subscriptionLocal.value.nextRenewalDate,
+  'MMMM DD, YYYY'
+)
 
 const isPricingPlanDialogVisible = ref(false)
 const isConfirmDialogVisible = ref(false)
-const isCardEditDialogVisible = ref(false)
-const isCardDetailSaveBilling = ref(false)
 
-const creditCards: CardDetails[] = [
-  {
-    name: 'Tom McBride',
-    number: '5531234567899856',
-    expiry: '12/23',
-    isPrimary: true,
-    type: 'visa',
-    cvv: '456',
-    image: visa,
-  },
-  {
-    name: 'Mildred Wagner',
-    number: '4851234567895896',
-    expiry: '10/27',
-    isPrimary: false,
-    type: 'mastercard',
-    cvv: '123',
-    image: mastercard,
-  },
-]
-
-const countryList = [
-  'United States',
-  'Canada',
-  'United Kingdom',
-  'Australia',
-  'New Zealand',
-  'India',
-  'Russia',
-  'China',
-  'Japan',
-]
-
-const currentCardDetails = ref()
-
-const openEditCardDialog = (cardDetails: CardDetails) => {
-  currentCardDetails.value = cardDetails
-
-  isCardEditDialogVisible.value = true
-}
-
-const cardNumber = ref(135632156548789)
-const cardName = ref('john Doe')
-const cardExpiryDate = ref('05/24')
-const cardCvv = ref(420)
-
-const resetPaymentForm = () => {
-  cardNumber.value = 135632156548789
-  cardName.value = 'john Doe'
-  cardExpiryDate.value = '05/24'
-  cardCvv.value = 420
-
-  selectedPaymentMethod.value = 'credit-debit-atm-card'
-}
+// Watch for changes in accountStore.subscriptionDetails
+watch(
+  () => accountStore.subscriptionDetails,
+  (newValue) => {
+    subscriptionLocal.value = newValue
+  }
+)
 </script>
 
 <template>
@@ -86,27 +35,20 @@ const resetPaymentForm = () => {
               <div>
                 <div class="mb-6">
                   <h3 class="text-base font-weight-medium mb-1">
-                    Your Current Plan is Basic
+                    Your Current Plan is
+                    {{ subscriptionLocal?.stripeProducts.name }}
                   </h3>
-                  <p class="text-base">A simple start for everyone</p>
+                  <p class="text-base">
+                    {{ subscriptionLocal?.stripeProducts?.description }}
+                  </p>
                 </div>
 
                 <div class="mb-6">
                   <h3 class="text-base font-weight-medium mb-1">
-                    Active until Dec 09, 2021
+                    Active until {{ formattedDate }}
                   </h3>
                   <p class="text-base">
-                    We will send you a notification upon Subscription expiration
-                  </p>
-                </div>
-
-                <div>
-                  <h3 class="text-base font-weight-medium mb-1">
-                    <span class="me-3">$199 Per Month</span>
-                    <VChip color="primary" size="small" label> Popular </VChip>
-                  </h3>
-                  <p class="text-base mb-0">
-                    Standard plan for small to medium businesses
+                    We will send you a notification upon subscription expiration
                   </p>
                 </div>
               </div>
@@ -114,22 +56,75 @@ const resetPaymentForm = () => {
 
             <VCol cols="12" md="6">
               <!-- progress -->
-              <h6 class="d-flex font-weight-medium text-base mt-4 mb-2">
-                <span>Days till next renewal</span>
-                <VSpacer />
-                <span>24 of 30 Days</span>
-              </h6>
+              <div>
+                <h6 class="d-flex font-weight-medium text-base mt-4 mb-2">
+                  <span>Days till next credit renewal</span>
+                  <VSpacer />
+                  <span>{{ subscriptionLocal.remainingDays }} of 30 Days</span>
+                </h6>
 
-              <VProgressLinear
-                color="primary"
-                rounded
-                height="12"
-                model-value="75"
-              />
+                <VProgressLinear
+                  color="primary"
+                  rounded
+                  height="12"
+                  :model-value="
+                    (Number(subscriptionLocal.remainingDays) / 30) * 100
+                  "
+                />
+              </div>
+              <!-- <div>
+                <h6 class="d-flex font-weight-medium text-base mt-4 mb-2">
+                  <span>Remaining messages till next credit renewal</span>
+                  <VSpacer />
+                  <span
+                    >{{ subscriptionLocal.remainingDays }} of
+                    {{
+                      subscriptionLocal?.stripeProducts?.meta?.renewal
+                        ?.monthly || '??'
+                    }}
+                    Credits</span
+                  >
+                </h6>
 
-              <p class="text-base mt-2 mb-0">
-                6 days remaining until your plan requires update
-              </p>
+                <VProgressLinear
+                  color="primary"
+                  rounded
+                  height="12"
+                  :model-value="
+                    (Number(subscriptionLocal.remainingDays) /
+                      subscriptionLocal?.stripeProducts?.meta?.renewal
+                        ?.monthly) *
+                    100
+                  "
+                />
+              </div>
+
+              <div>
+                <h6 class="d-flex font-weight-medium text-base mt-4 mb-2">
+                  <span>Remaining memory storage</span>
+                  <VSpacer />
+                  <span
+                    >{{ subscriptionLocal.remainingDays }} of
+                    {{
+                      subscriptionLocal?.stripeProducts?.meta?.renewal
+                        ?.monthly || '??'
+                    }}
+                    MB</span
+                  >
+                </h6>
+
+                <VProgressLinear
+                  color="primary"
+                  rounded
+                  height="12"
+                  :model-value="
+                    (Number(subscriptionLocal.remainingDays) /
+                      subscriptionLocal?.stripeProducts?.meta?.renewal
+                        ?.monthly) *
+                    100
+                  "
+                />
+              </div> -->
             </VCol>
 
             <VCol cols="12">

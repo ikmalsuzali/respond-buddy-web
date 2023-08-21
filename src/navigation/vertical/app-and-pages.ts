@@ -41,6 +41,11 @@ export default [
     to: { name: 'pages-account-settings-tab', params: { tab: 'account' } },
   },
   {
+    title: 'Get more credits',
+    to: 'apps-pricings',
+    icon: { icon: 'tabler-sparkles' },
+  },
+  {
     hidden: true,
     title: 'Under Maintenance',
     to: 'pages-misc-under-maintenance',
@@ -52,12 +57,7 @@ export default [
     to: 'pages-misc-not-found',
     target: '_blank',
   },
-  {
-    title: 'Get more credits',
-    to: 'pages-misc-not-found',
-    icon: { icon: 'tabler-sparkles' },
-    target: '_blank',
-  },
+
   // { title: 'Help Center', to: 'pages-help-center' },
 
   // {

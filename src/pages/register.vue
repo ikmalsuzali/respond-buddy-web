@@ -20,11 +20,11 @@ import {
 } from '@validators'
 
 const refVForm = ref<VForm>()
-const username = ref('test123')
-const email = ref('test123@gmail.com')
-const password = ref('soccer')
-const confirmPassword = ref('soccer')
-const workspaceName = ref('test123')
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
+const workspaceName = ref('')
 const isLoading = ref(false)
 
 const privacyPolicies = ref(true)
@@ -58,6 +58,7 @@ const register = () => {
         session: accessToken,
         user: userData,
         user_workspace: userWorkspace,
+        subscription,
       } = res.data
 
       const userAbilities = [{ action: 'manage', subject: 'all' }]
@@ -67,6 +68,7 @@ const register = () => {
       localStorage.setItem('userData', JSON.stringify(userData))
       localStorage.setItem('accessToken', JSON.stringify(accessToken))
       localStorage.setItem('userWorkspace', JSON.stringify(userWorkspace))
+      localStorage.setItem('subscription', JSON.stringify(subscription))
 
       // Redirect to `to` query if exist or redirect to index route
       router.replace(route.query.to ? String(route.query.to) : '/')

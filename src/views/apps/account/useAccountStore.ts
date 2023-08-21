@@ -11,8 +11,57 @@ export const useAccountStore = defineStore('AccountStore', {
       email: '',
       language: 'English',
     },
+    subscriptionDetails: {
+      createdAt: '',
+      nextRenewalDate: '',
+      remainingDays: '',
+      stripeProducts: {
+        id: '',
+        name: '',
+        description: '',
+        meta: {},
+      },
+    },
   }),
+  getters: {
+    getCurrentSubscriptionProductId(state) {
+      return state.subscriptionDetails.stripeProducts?.id || ''
+    },
+  },
   actions: {
+    getSubscriptionItem() {
+      const subscription = JSON.parse(
+        localStorage.getItem('subscription') || '{}'
+      )
+      console.log(
+        '🚀 ~ file: useAccountStore.ts:37 ~ getSubscriptionItem ~ subscription:',
+        subscription
+      )
+      this.subscriptionDetails = this.deserializeSubscriptionItem(subscription)
+      return new Promise((resolve) => {
+        axios.get('/v1/workspace/subscription').then((response) => {
+          this.subscriptionDetails = this.deserializeSubscriptionItem(
+            response.data
+          )
+
+          localStorage.setItem('subscription', JSON.stringify(response.data))
+          resolve(response.data)
+        })
+      })
+    },
+    deserializeSubscriptionItem(item: any) {
+      return {
+        createdAt: item.created_at,
+        nextRenewalDate: item.next_renewal_date,
+        remainingDays: item.remaining_renewal_days,
+        stripeProducts: {
+          id: item.stripe_products.id,
+          name: item.stripe_products.name,
+          description: item.stripe_products.description,
+          meta: item.stripe_products.meta,
+        },
+      }
+    },
     serializeItem() {
       return {
         username: this.accountDetails.username,
@@ -65,6 +114,24 @@ export const useAccountStore = defineStore('AccountStore', {
         axios.post('/v1/auth/reset-password').then((response) => {
           resolve(response.data)
         })
+      })
+    },
+
+    logout() {
+      // Remove "userData" from localStorage
+      localStorage.removeItem('userData')
+      // Remove "accessToken" from localStorage
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('userWorkspace')
+      localStorage.removeItem('subscription')
+
+      // Redirect to login page
+      this.$router.push('/login').then(() => {
+        // ℹ️ We had to remove abilities in then block because if we don't nav menu items mutation is visible while redirecting user to login page
+        // Remove "userAbilities" from localStorage
+        localStorage.removeItem('userAbilities')
+
+        // Reset ability to initial ability
       })
     },
   },

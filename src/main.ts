@@ -12,9 +12,14 @@ import { abilitiesPlugin } from '@casl/vue'
 import '@core/scss/template/index.scss'
 import '@styles/styles.scss'
 import { createPinia } from 'pinia'
-import { createApp } from 'vue'
+import { createApp, markRaw } from 'vue'
+import { useAccountStore } from './views/apps/account/useAccountStore'
 
-export const pinia = createPinia();
+export const pinia = createPinia()
+
+pinia.use(({ store }) => {
+  store.$router = markRaw(router)
+})
 
 loadFonts()
 
@@ -30,6 +35,9 @@ app.use(i18n)
 app.use(abilitiesPlugin, ability, {
   useGlobalProperties: true,
 })
+
+useAccountStore().getItem()
+useAccountStore().getSubscriptionItem()
 
 // Mount vue app
 app.mount('#app')

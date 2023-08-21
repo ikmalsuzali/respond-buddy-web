@@ -161,27 +161,15 @@ const onPasswordResetClick = async () => {
       </VCard>
     </VCol>
 
-    <!-- <VCol cols="12">
-      <VCard title="Delete Account">
+    <VCol cols="12">
+      <VCard title="Logout Account">
         <VCardText>
-          <div>
-            <VCheckbox
-              v-model="isAccountDeactivated"
-              :rules="validateAccountDeactivation"
-              label="I confirm my account deactivation"
-            />
-          </div>
-          <VBtn
-            :disabled="!isAccountDeactivated"
-            color="error"
-            class="mt-3"
-            @click="isConfirmDialogOpen = true"
-          >
-            Deactivate Account
+          <VBtn color="error" class="mt-3" @click="accountStore.logout">
+            Logout
           </VBtn>
         </VCardText>
       </VCard>
-    </VCol> -->
+    </VCol>
   </VRow>
 
   <!-- Confirm Dialog -->

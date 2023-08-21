@@ -13,28 +13,34 @@ const router = createRouter({
       path: '/',
       redirect: (to) => {
         const userData = JSON.parse(localStorage.getItem('userData') || '{}')
+        const token = JSON.parse(localStorage.getItem('accessToken') || '')
 
-        if (userData.user_id || userData.id) {
+        if ((userData.user_id || userData.id) && token) {
           return { name: 'apps-tags' }
         }
+
+        localStorage.removeItem('accessToken')
+        localStorage.removeItem('userWorkspace')
+        localStorage.removeItem('subscription')
+        localStorage.removeItem('userData')
 
         return { name: 'login', query: to.query }
       },
     },
     {
-      path: '/pages/user-profile',
-      redirect: () => ({
-        name: 'pages-user-profile-tab',
-        params: { tab: 'profile' },
+      path: '/payment/:paymentId/process',
+      redirect: (to) => ({
+        name: 'pages-misc-payment-process',
+        params: { id: to.params.paymentId },
       }),
     },
-    {
-      path: '/pages/account-settings',
-      redirect: () => ({
-        name: 'pages-account-settings-tab',
-        params: { tab: 'account' },
-      }),
-    },
+    // {
+    //   path: '/pages/account-settings',
+    //   redirect: () => ({
+    //     name: 'pages-account-settings-tab',
+    //     params: { tab: 'account' },
+    //   }),
+    // },
     ...setupLayouts(routes),
   ],
 })
