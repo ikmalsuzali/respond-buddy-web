@@ -52,10 +52,10 @@ export const useAccountStore = defineStore('AccountStore', {
         nextRenewalDate: item.next_renewal_date,
         remainingDays: item.remaining_renewal_days,
         stripeProducts: {
-          id: item.stripe_products.id,
-          name: item.stripe_products.name,
-          description: item.stripe_products.description,
-          meta: item.stripe_products.meta,
+          id: item.stripe_products?.id,
+          name: item.stripe_products?.name,
+          description: item.stripe_products?.description,
+          meta: item.stripe_products?.meta,
         },
       }
     },
@@ -70,11 +70,11 @@ export const useAccountStore = defineStore('AccountStore', {
     },
     deserializeItem(item: any) {
       return {
-        username: item.username,
-        firstName: item.first_name || '',
-        lastName: item.last_name || '',
-        email: item.email,
-        language: item.language || 'English',
+        username: item?.username,
+        firstName: item?.first_name || '',
+        lastName: item?.last_name || '',
+        email: item?.email,
+        language: item?.language || 'English',
       }
     },
     getItem() {
