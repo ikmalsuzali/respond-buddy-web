@@ -35,7 +35,7 @@ getStoreTypes()
   <div>
     <VRow>
       <VCol cols="12">
-        <h4 class="text-h4 mb-6">Memory</h4>
+        <p class="text-h2 font-weight-thin">Memory</p>
         <p class="mb-0">
           Memory allows you to store and retrieve data just like your brain.
         </p>

@@ -3,6 +3,21 @@ import { defineStore } from 'pinia'
 
 export const useMemoryStore = defineStore('MemoryStore', {
   state: () => ({
+    // NEW
+    list: [],
+    isCrudDialogOpen: false,
+    isCrudLoading: false,
+    pagination: {
+      total: 0,
+      perPage: 12,
+      currentPage: 1,
+    },
+    error: null,
+    selectedItem: {},
+    searchQuery: '',
+    isDeleteDialogOpen: false,
+
+    // OLD
     memories: [],
     isMemoryDialogOpen: false,
     selectedMemoryType: {
@@ -18,25 +33,86 @@ export const useMemoryStore = defineStore('MemoryStore', {
     websites: [],
   }),
   actions: {
-    // 👉 Fetch users data
-    fetchMemories(params?: any) {
-      return new Promise((resolve, reject) => {
+    // ---- NEW ---- //
+    updateSearchQuery(query: string) {
+      this.searchQuery = query
+    },
+
+    serializeItem() {
+      return {
+        // id: this.selectedItem.id,
+        // name: this.selectedItem.name,
+        // used_description: this.selectedItem.usedDescription,
+        // ai_template: this.selectedItem.aiTemplate,
+        // workspace: this.selectedItem.workspace,
+        // is_system_tag: this.selectedItem.isSystemTag,
+      }
+    },
+
+    deserializeItem(item: any) {
+      return {
+        id: item.id,
+        name: item.name,
+        usedDescription: item.used_description,
+        aiTemplate: item.ai_template,
+        workspace: item.workspace,
+        isSystemTag: item.is_system_tag,
+      }
+    },
+    fetchList({ page = 1, pageSize = 10, ...params } = {}) {
+      this.isCrudLoading = true
+      this.list = []
+      return new Promise(() => {
         axios
-          .get('/v1/store', { params })
+          .get('/v1/store', {
+            params: {
+              ...params,
+              page: this.pagination.currentPage,
+              limit: this.pagination.perPage,
+              search: this.searchQuery,
+            },
+          })
           .then((response) => {
-            this.memories = response.data?.data.stores
-            resolve(response.data)
+            this.list = response.data?.data
+            this.pagination.total = response.data?.total
+            this.error = null
           })
           .catch((error) => {
             // Reject the promise with the error
-            reject(error)
+            this.error = error.message
+          })
+          .finally(() => {
+            this.isCrudLoading = false
           })
       })
     },
 
-    fetchMemoryByDoc(params: any) {
-      return axios.get('/v1/store/docs', { params })
+    setIsCrudDialogOpen(value: boolean) {
+      this.isCrudDialogOpen = value
+
+      if (this.isCrudDialogOpen === false) {
+        this.selectedItem = {
+          id: '',
+          name: '',
+          usedDescription: '',
+          aiTemplate: '',
+          workspace: '',
+          isSystemTag: false,
+        }
+      }
     },
+
+    setSelectedItem(item: any) {
+      this.selectedItem = this.deserializeItem(item)
+      this.isCrudDialogOpen = true
+    },
+
+    setSearchQuery(query: any) {
+      this.searchQuery = query
+      this.fetchList() // Refetch with updated search query
+    },
+
+    // ---- OLD ---- //
 
     fetchMemory(id: string) {
       return new Promise((resolve, reject) => {
@@ -57,7 +133,9 @@ export const useMemoryStore = defineStore('MemoryStore', {
         axios
           .delete(`/v1/store/${id}`)
           .then((response) => {
-            this.fetchMemories({ page: 1, limit: 10 })
+            this.error = null
+            this.fetchList()
+            this.setIsCrudDialogOpen(false)
             resolve(response.data)
           })
           .catch((error) => {

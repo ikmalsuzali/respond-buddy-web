@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useAccountStore } from '@/views/apps/account/useAccountStore'
 import { usePricingStore } from '@/views/apps/account/usePricingStore'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const pricingStore = usePricingStore()
 const accountStore = useAccountStore()
 pricingStore.getPricingPlans()
@@ -15,6 +17,25 @@ const currentPricingPlanLocal = computed(() => {
     ? pricingPlansYearlyLocal.value
     : pricingPlansMonthlyLocal.value
 })
+
+const buttonData = (plan: any) => {
+  if (accountStore.getCurrentSubscriptionProduct.key === plan.key) {
+    return {
+      color: 'success',
+      text: 'Your Current Plan',
+    }
+  } else if (accountStore.getCurrentSubscriptionProduct.order > plan.order) {
+    return {
+      color: 'error',
+      text: 'Downgrade 😭',
+    }
+  } else {
+    return {
+      color: 'primary',
+      text: 'Upgrade 🥹',
+    }
+  }
+}
 
 const onCheckoutClick = async (plan: any) => {
   console.log(plan)
@@ -41,6 +62,20 @@ interface Pricing {
 </script>
 
 <template>
+  <v-alert
+    v-if="route.query?.status === 'success'"
+    class="mb-4"
+    type="success"
+    title="Successfully subscribed"
+    text="Thank you for subscribing to our service and we hope you enjoy it."
+  ></v-alert>
+  <v-alert
+    v-if="route.query?.status === 'failed'"
+    class="mb-4"
+    type="error"
+    title="Failed to subscribe"
+    text="Try again and if the problem persists, please contact our support team."
+  ></v-alert>
   <!-- 👉 Title and subtitle -->
   <div class="text-center">
     <h4 class="text-h1 font-weight-bold mb-4">
@@ -78,38 +113,42 @@ interface Pricing {
       cols="4"
     >
       <!-- 👉  Card -->
-      <VCard :class="plan.isPopular ? 'border-primary border-opacity-100' : ''">
-        <VCardText style="block-size: 4.125rem" class="text-end">
-          <!-- 👉 Popular -->
+      <VCard
+        :class="plan.isPopular ? 'border-primary border-opacity-100' : ''"
+        class="rounded-xl"
+      >
+        <!-- <VCardText style="block-size: 4.125rem" class="text-end">
           <VChip v-show="plan.isPopular" label color="primary" size="small">
             Popular
           </VChip>
-        </VCardText>
+        </VCardText> -->
 
         <!-- 👉 Plan logo -->
-        <VCardText class="text-center">
+        <VCardText class="text-center pb-2">
           <!-- 👉 Plan name -->
-          <h5 class="text-h5 mb-2">
-            {{ plan.name }}
-          </h5>
-          <p class="mb-0">
-            {{ plan.description }}
-          </p>
+          <div class="d-flex">
+            <h5 class="text-h2 font-weight-bold mb-2 pl-2">
+              {{ plan.name }}
+            </h5>
+            <p class="pl-2" style="align-self: self-end">
+              {{ plan.description }}
+            </p>
+          </div>
         </VCardText>
 
         <!-- 👉 Plan price  -->
         <VCardText class="position-relative text-center">
           <div class="d-flex justify-center align-center">
             <sup class="text-sm font-weight-medium me-1">$</sup>
-            <h1 class="text-5xl font-weight-medium text-primary">
+            <h1 class="text-5xl font-weight-bold">
               {{ plan?.meta.price === 0 ? '0' : `${plan?.meta.price}` }}
             </h1>
-            <sub class="text-sm font-weight-medium ms-1 mt-4">/month</sub>
+            <sub class="text-sm font-weight-bold ms-1 mt-4">/month</sub>
           </div>
         </VCardText>
 
         <!-- 👉 Plan features -->
-        <VCardText class="mt-5">
+        <VCardText>
           <VList class="card-list">
             <VListItem
               v-for="feature in plan?.meta?.desc_points"
@@ -127,22 +166,16 @@ interface Pricing {
         </VCardText>
 
         <!-- 👉 Plan actions -->
-        <VCardActions>
+        <VCardActions class="px-10">
           <VBtn
             @click="onCheckoutClick(plan)"
+            :loading="pricingStore.isLoading"
             block
-            :color="
-              accountStore.getCurrentSubscriptionProductId === plan.id
-                ? 'success'
-                : 'primary'
-            "
+            :color="buttonData(plan).color"
             :variant="plan?.isPopular ? 'elevated' : 'tonal'"
+            class="rounded-xl"
           >
-            {{
-              accountStore.getCurrentSubscriptionProductId === plan.id
-                ? 'Your Current Plan'
-                : 'Upgrade'
-            }}
+            {{ buttonData(plan).text }}
           </VBtn>
         </VCardActions>
       </VCard>

@@ -1,7 +1,7 @@
-import { defineStore } from 'pinia';
+import { defineStore } from 'pinia'
 
 export enum SnackbarType {
-  SUCCESS = 'success',
+  SUCCESS = 'primary',
   ERROR = 'error',
   WARNING = 'warning',
 }
@@ -15,21 +15,29 @@ export const useSnackbarStore = defineStore('SnackbarStore', {
     action: {
       text: '',
       handler: () => {},
-    }
+    },
   }),
 
   actions: {
-    showSnackbar({title, description, type, action}: {title: string, description: string | undefined, type: SnackbarType, action: any}) {
-      this.isSnackbarActive = true;
-      this.title = title;
-      this.description = description;
-      this.type = type;
+    showSnackbar({
+      title,
+      description,
+      type,
+      action,
+    }: {
+      title: string
+      description: string | undefined
+      type: SnackbarType
+      action: any
+    }) {
+      this.isSnackbarActive = true
+      this.title = title
+      this.description = description
+      this.type = type
       this.action = {
         text: action.text,
         handler: action.handler,
-      };
-    }
-
-  
+      }
+    },
   },
 })

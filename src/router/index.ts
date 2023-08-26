@@ -29,10 +29,7 @@ const router = createRouter({
     },
     {
       path: '/payment/:paymentId/process',
-      redirect: (to) => ({
-        name: 'pages-misc-payment-process',
-        params: { id: to.params.paymentId },
-      }),
+      component: () => import('../pages/pages/misc/payment-process.vue'),
     },
     // {
     //   path: '/pages/account-settings',

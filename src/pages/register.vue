@@ -8,7 +8,6 @@ import authV2MaskLight from '@images/pages/misc-mask-light.png'
 import { VForm } from 'vuetify/components/VForm'
 
 import { useAppAbility } from '@/plugins/casl/useAppAbility'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import axios from '@axios'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
@@ -238,16 +237,15 @@ const onSubmit = () => {
                 </RouterLink>
               </VCol>
 
-              <VCol cols="12" class="d-flex align-center">
+              <!-- <VCol cols="12" class="d-flex align-center">
                 <VDivider />
                 <span class="mx-4">or</span>
                 <VDivider />
               </VCol>
 
-              <!-- auth providers -->
               <VCol cols="12" class="text-center">
                 <AuthProvider />
-              </VCol>
+              </VCol> -->
             </VRow>
           </VForm>
         </VCardText>

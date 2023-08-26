@@ -48,6 +48,19 @@ watchEffect(() => {
       </VBtn>
     </div>
 
+    <VContainer
+      v-if="!tagStore.isCrudLoading && tagStore.list.length === 0"
+      class="fill-height pa-0"
+    >
+      <VLayout align-center justify-center>
+        <VRow xs12 sm8 md4>
+          <VCol>
+            <v-alert color="primary" value="true"> No records found </v-alert>
+          </VCol>
+        </VRow>
+      </VLayout>
+    </VContainer>
+
     <VRow v-if="tagStore.isCrudLoading">
       <VCol v-for="() in 8" cols="12" md="3" lg="3">
         <VSkeletonLoader
@@ -59,7 +72,7 @@ watchEffect(() => {
     <VDataIterator
       :items="tagStore.list"
       :page="tagStore.pagination.currentPage"
-      :items-per-page="tagStore.pagination.perPage || 10"
+      :items-per-page="tagStore.pagination.perPage || 12"
     >
       <template v-slot:default="{ items }">
         <VRow>

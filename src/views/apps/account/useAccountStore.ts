@@ -19,13 +19,15 @@ export const useAccountStore = defineStore('AccountStore', {
         id: '',
         name: '',
         description: '',
+        key: '',
         meta: {},
+        order: 0
       },
     },
   }),
   getters: {
-    getCurrentSubscriptionProductId(state) {
-      return state.subscriptionDetails.stripeProducts?.id || ''
+    getCurrentSubscriptionProduct(state) {
+      return state.subscriptionDetails.stripeProducts || ''
     },
   },
   actions: {
@@ -56,6 +58,8 @@ export const useAccountStore = defineStore('AccountStore', {
           name: item.stripe_products?.name,
           description: item.stripe_products?.description,
           meta: item.stripe_products?.meta,
+          key: item.stripe_products?.key,
+          order: item.stripe_products?.order,
         },
       }
     },

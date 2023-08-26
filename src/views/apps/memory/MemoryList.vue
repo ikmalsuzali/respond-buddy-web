@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { useMemoryStore } from '@/views/apps/memory/useMemoryStore'
-import { useWorkspaceStore } from '@/views/apps/workspace/useWorkspaceStore'
 import type { Options } from '@core/types'
-import { VDataTableServer } from 'vuetify/labs/VDataTable'
-import DeleteDialog from './DeleteDialog.vue'
+import { VDataIterator } from 'vuetify/labs/VDataIterator'
+import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
 
 // 👉 Store
-const workspaceStore = useWorkspaceStore()
 const memoryStore = useMemoryStore()
 const searchQuery = ref('')
 const totalItems = ref(0)
@@ -15,6 +13,8 @@ const isDeleteDialogEnabled = ref({
   visible: false,
   id: '',
 })
+const localQuery = ref(memoryStore.searchQuery)
+const debouncedQuery = refDebounced(localQuery, 300)
 // const isDocLoading = ref(false)
 
 const options = ref<Options>({
@@ -25,13 +25,12 @@ const options = ref<Options>({
   search: undefined,
 })
 
-const headers = [
-  { title: 'File', key: 'name', width: '20%' },
-  { title: 'Created by', key: 'created_by', width: '10%' },
-  { title: 'Created at', key: 'created_at', width: '10%' },
-  { title: 'Size', key: 'size', width: '5%' },
-  { title: 'Actions', key: 'actions', align: 'end', sortable: false },
-]
+watch(
+  () => debouncedQuery.value,
+  () => {
+    memoryStore.updateSearchQuery(debouncedQuery.value)
+  }
+)
 
 const deleteMethods = [
   {
@@ -51,27 +50,6 @@ const deleteMethods = [
 ]
 
 // 👉 Fetching users
-
-const fetchMemorys = () => {
-  isMemoryLoading.value = true
-  memoryStore
-    .fetchMemories({
-      search: searchQuery.value,
-      page: options.value.page,
-      limit: options.value.itemsPerPage,
-      sortField: options.value.sortBy?.[0]?.key,
-      sortOrder: options.value.sortBy?.[0]?.order,
-    })
-    .then((response) => {
-      totalItems.value = response?.data.total_count
-    })
-    .catch((error) => {
-      console.error(error)
-    })
-    .finally(() => {
-      isMemoryLoading.value = false
-    })
-}
 
 const formatBytes = (bytes: number) => {
   if (bytes < 1024 * 1024) {
@@ -120,27 +98,9 @@ const onDownload = (memory: any) => {
 // }
 
 watchEffect(() => {
-  fetchMemorys()
+  memoryStore.fetchList()
   // fetchDocs()
 })
-
-// 👉 search filters
-const memoryHeader = [
-  { title: 'Admin', value: 'admin' },
-  { title: 'Author', value: 'author' },
-  { title: 'Editor', value: 'editor' },
-  { title: 'Maintainer', value: 'maintainer' },
-  { title: 'Subscriber', value: 'subscriber' },
-]
-
-const resolveType = (stat: string) => {
-  const statLowerCase = stat.toLowerCase()
-  if (statLowerCase === 'pending') return 'warning'
-  if (statLowerCase === 'raw') return 'Raw'
-  if (statLowerCase === 'inactive') return 'secondary'
-
-  return 'primary'
-}
 
 const isAddNewUserDrawerVisible = ref(false)
 
@@ -168,188 +128,95 @@ const onSubmitDeletion = () => {
 
 <template>
   <section>
-    <VCard>
-      <VCardText class="d-flex flex-wrap gap-4">
-        <!-- 👉 Search  -->
-        <AppTextField
-          v-model="searchQuery"
-          placeholder="Search Memory"
-          density="comfortable"
-          style="width: 100%"
-        />
-      </VCardText>
+    <div class="d-flex mb-8">
+      <!-- 👉 Search  -->
+      <AppTextField
+        v-model="localQuery"
+        placeholder="Search Memory"
+        density="comfortable"
+        style="width: 100%; background-color: white"
+      />
+    </div>
 
-      <VDivider />
+    <VContainer
+      v-if="!memoryStore.isCrudLoading && memoryStore.list.length === 0"
+      class="fill-height pa-0"
+    >
+      <VLayout align-center justify-center>
+        <VRow xs12 sm8 md4>
+          <VCol>
+            <v-alert color="primary" value="true"> No records found </v-alert>
+          </VCol>
+        </VRow>
+      </VLayout>
+    </VContainer>
 
-      <!-- SECTION datatable -->
-      <VDataTableServer
-        v-model:items-per-page="options.itemsPerPage"
-        v-model:page="options.page"
-        :items="memoryStore.$state.memories"
-        :items-length="totalItems"
-        :headers="headers"
-        :loading="isMemoryLoading"
-        class="text-no-wrap"
-        @update:options="options = $event"
-      >
-        <!-- File  -->
-        <template #item.name="{ item }">
-          <span class="text-capitalize font-weight-medium">{{
-            item.raw.s3_s3Tostore?.original_name ||
-            item.raw.s3_s3Tostore?.original_name
-          }}</span>
-        </template>
-        <!-- User -->
-        <template #item.created_by="{ item }">
-          <span class="text-capitalize font-weight-medium">{{
-            item.raw.users?.first_name && totalItems.raw.users?.last_name
-              ? item.raw.users?.first_name + ' ' + item.raw.users?.last_name
-              : item.raw.users?.email
-          }}</span>
-        </template>
+    <VRow v-if="memoryStore.isCrudLoading">
+      <VCol v-for="() in 12" cols="12" md="12" lg="12">
+        <VSkeletonLoader
+          class="mx-auto border"
+          type="avatar, text, list-item-two-line"
+        ></VSkeletonLoader>
+      </VCol>
+    </VRow>
 
-        <!-- User -->
-        <template #item.size="{ item }">
-          <span class="text-capitalize font-weight-medium">{{
-            item.raw.s3_s3Tostore?.file_size
-              ? formatBytes(item.raw.s3_s3Tostore?.file_size)
-              : '0'
-          }}</span>
-        </template>
-
-        <!-- <template #item.name="{ item }">
-          <div class="d-flex align-center">
-            <VAvatar
-              size="38"
-              :variant="!item.raw.avatar ? 'tonal' : undefined"
-              :color="
-                !item.raw.avatar
-                  ? resolveUserRoleVariant(item.raw.role).color
-                  : undefined
-              "
-              class="me-3"
-            >
-              <VImg v-if="item.raw.avatar" :src="item.raw.avatar" />
-              <span v-else>{{ avatarText(item.raw.fullName) }}</span>
-            </VAvatar>
-            <div class="d-flex flex-column">
-              <h6 class="text-body-1 font-weight-medium">
-                <RouterLink
-                  :to="{
-                    name: 'apps-user-view-id',
-                    params: { id: item.raw.id },
-                  }"
-                  class="user-list-name"
-                >
-                  {{ item.raw.fullName }}
-                </RouterLink>
-              </h6>
-              <span class="text-sm text-disabled">{{ item.raw.email }}</span>
-            </div>
-          </div>
-        </template> -->
-
-        <!-- Role -->
-        <!-- <template #item.role="{ item }">
-          <div class="d-flex align-center gap-4">
-            <VAvatar
-              size="30"
-              variant="tonal"
-              :color="resolveUserRoleVariant(item.raw.role).color"
-            >
-              <VIcon
-                size="20"
-                :icon="resolveUserRoleVariant(item.raw.role).icon"
-              />
-            </VAvatar>
-            <span class="text-capitalize">{{ item.raw.role }}</span>
-          </div>
-        </template> -->
-
-        <!-- Plan -->
-        <!-- <template #item.plan="{ item }">
-          <span class="text-capitalize font-weight-medium">{{
-            item.raw.currentPlan
-          }}</span>
-        </template> -->
-
-        <template #item.created_at="{ item }">
-          <span class="text-capitalize font-weight-medium">{{
-            workspaceStore.formatTimestamp(item.raw.created_at)
-          }}</span>
-        </template>
-
-        <template #bottom>
-          <VDivider />
-
-          <div
-            class="d-flex align-center justify-sm-space-between justify-center flex-wrap gap-3 pa-5 pt-3"
+    <VDataIterator
+      :items="memoryStore.list"
+      :page="memoryStore.pagination.currentPage"
+      :items-per-page="memoryStore.pagination.perPage || 12"
+    >
+      <template v-slot:default="{ items }">
+        <VRow>
+          <VCol
+            v-for="(item, index) in items"
+            :key="index"
+            cols="12"
+            md="12"
+            lg="12"
           >
-            <div>
-              <AppSelect
-                :model-value="options.itemsPerPage"
-                :items="[
-                  { value: 10, title: '10' },
-                  { value: 25, title: '25' },
-                  { value: 50, title: '50' },
-                  { value: 100, title: '100' },
-                ]"
-                style="width: 5rem"
-                @update:model-value="
-                  ($event) => {
-                    options.itemsPerPage = parseInt($event, 10)
-                    options.page = 1
-                  }
-                "
-              />
-            </div>
+            <VCard class="rounded-xl">
+              <VCardItem>
+                <div class="d-flex">
+                  <VImg max-width="30" :src="item.raw?.store_types?.icon" />
+                  <VCardTitle class="ml-4" style="align-self: end">
+                    {{ item.raw?.s3_s3Tostore?.original_name }}
+                  </VCardTitle>
+                </div>
+              </VCardItem>
+              <VCardText class="pb-2 pl-8">
+                <p class="clamp-text mb-0">
+                  {{ item.raw.output_text }}
+                </p>
+              </VCardText>
+              <VCardActions class="pl-8">
+                <VBtn color="secondary">Preview</VBtn>
+                <VBtn color="error">Delete</VBtn>
+              </VCardActions>
 
-            <VPagination
-              v-model="options.page"
-              :length="Math.ceil(totalItems / options.itemsPerPage)"
-              :total-visible="
-                $vuetify.display.xs
-                  ? 1
-                  : Math.ceil(totalItems / options.itemsPerPage)
-              "
-            >
-              <template #prev="slotProps">
-                <VBtn
-                  variant="tonal"
-                  color="default"
-                  v-bind="slotProps"
-                  :icon="false"
-                >
-                  Previous
-                </VBtn>
-              </template>
+              <!-- <VCardItem>
+                {{ item.raw }}
+              </VCardItem>
+              <VCardItem>
+                {{ item.raw?.s3_s3Tostore?.original_name }}
+              </VCardItem> -->
+            </VCard>
+          </VCol>
+        </VRow>
+      </template>
+    </VDataIterator>
 
-              <template #next="slotProps">
-                <VBtn
-                  variant="tonal"
-                  color="default"
-                  v-bind="slotProps"
-                  :icon="false"
-                >
-                  Next
-                </VBtn>
-              </template>
-            </VPagination>
-          </div>
-        </template>
+    <div
+      class="d-flex align-center justify-space-between flex-wrap gap-3 pa-5 pt-3"
+    >
+      <VSpacer />
 
-        <!-- Actions -->
-        <template #item.actions="{ item }">
-          <IconBtn @click="onDownload(item.raw)">
-            <VIcon icon="tabler-download" />
-          </IconBtn>
-          <IconBtn @click="deleteMemory(item.raw.id)">
-            <VIcon icon="tabler-trash" />
-          </IconBtn>
-        </template>
-      </VDataTableServer>
-      <!-- SECTION -->
-    </VCard>
+      <VPagination
+        v-if="memoryStore.list.length >= 12"
+        v-model="memoryStore.pagination.currentPage"
+        :length="memoryStore.pagination.total"
+        :total-visible="5"
+      />
+    </div>
 
     <!-- 👉 Delete Memory -->
     <DeleteDialog

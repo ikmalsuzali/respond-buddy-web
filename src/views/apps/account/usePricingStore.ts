@@ -46,12 +46,14 @@ export const usePricingStore = defineStore('PricingStore', {
     },
     checkoutPlan(planId: string) {
       return new Promise((resolve) => {
-        const response = axios
+        this.isLoading = true
+        axios
           .post('/v1/checkout-session', {
             plan_id: planId,
           })
           .then((response) => {
             window.location.href = response.data.stripe_url
+            this.isLoading = false
             resolve(response.data)
           })
       })

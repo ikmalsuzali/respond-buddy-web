@@ -5,7 +5,10 @@ const snackbarStore = useSnackbarStore()
 
 <template>
   <!-- Snackbar -->
-  <VSnackbar v-model="snackbarStore.isSnackbarActive">
+  <VSnackbar
+    v-model="snackbarStore.isSnackbarActive"
+    :color="snackbarStore.type"
+  >
     {{ snackbarStore.title }}
     <template #actions>
       <VBtn

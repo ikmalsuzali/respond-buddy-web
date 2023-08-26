@@ -62,6 +62,8 @@ const saveFiles = (savingFiles) => {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      maxContentLength: 100000000,
+      maxBodyLength: 100000000,
       onUploadProgress: (progressEvent: any) => {
         const uploadedBytes = progressEvent.loaded
         const totalBytes = progressEvent.total

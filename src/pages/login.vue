@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useAppAbility } from '@/plugins/casl/useAppAbility'
-import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import axios from '@axios'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
@@ -37,8 +36,8 @@ const errors = ref<Record<string, string | undefined>>({
 })
 
 const refVForm = ref<VForm>()
-const email = ref('1234567890@gmail.com')
-const password = ref('soccer')
+const email = ref('')
+const password = ref('')
 const rememberMe = ref(false)
 const isLoading = ref(false)
 
@@ -198,16 +197,15 @@ const onSubmit = () => {
                   Create an account
                 </RouterLink>
               </VCol>
-              <VCol cols="12" class="d-flex align-center">
+              <!-- <VCol cols="12" class="d-flex align-center">
                 <VDivider />
                 <span class="mx-4">or</span>
                 <VDivider />
               </VCol>
 
-              <!-- auth providers -->
-              <VCol cols="12" class="text-center">
+=              <VCol cols="12" class="text-center">
                 <AuthProvider />
-              </VCol>
+              </VCol> -->
             </VRow>
           </VForm>
         </VCardText>
