@@ -321,7 +321,7 @@ $chat-app-header-height: 62px;
 
 .chat-content-container {
   /* stylelint-disable-next-line value-keyword-case */
-  background-color: v-bind(chatContentContainerBg);
+  background-color: #f5f5f5;
 
   // Adjust the padding so text field height stays 48px
   .chat-message-input {

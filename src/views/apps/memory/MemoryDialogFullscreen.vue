@@ -298,7 +298,7 @@ const { getRootProps, getInputProps, ...rest } = useDropzone({
           value="upload"
           >Upload</VTab
         >
-        <VTab value="analyze">Analyze</VTab>
+        <!-- <VTab value="analyze">Analyze</VTab> -->
         <VTab
           v-if="
             memoryStore.selectedMemoryType?.fields?.types?.includes(

@@ -80,7 +80,7 @@ const store = useChatStore()
     class="d-flex flex-column gap-y-1 chat-contacts-list px-3 list-none"
     :options="{ wheelPropagation: false }"
   >
-    <!-- <vue-pdf-embed :source="source" :disable-text-layer="false" /> -->
+    <vue-pdf-embed :source="source" :disable-text-layer="false" />
   </PerfectScrollbar>
 </template>
 

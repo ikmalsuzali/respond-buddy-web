@@ -28,7 +28,7 @@ export const useMemoryStore = defineStore('MemoryStore', {
     selectedMemoryChat: {},
     isSavingMessageLoading: false,
     selectedMemory: {
-      id: '26e0a59a-e17d-4ee0-ab95-de0c0d57b3b3',
+      id: '',
     },
     websites: [],
   }),
