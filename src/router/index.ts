@@ -12,8 +12,14 @@ const router = createRouter({
     {
       path: '/',
       redirect: (to) => {
-        const userData = JSON?.parse(localStorage?.getItem('userData') || '{}')
-        const token = JSON?.parse(localStorage?.getItem('accessToken') || '')
+        let userData = null
+        let token = null
+        try {
+          userData = JSON?.parse(localStorage?.getItem('userData') || '{}')
+          token = JSON?.parse(localStorage?.getItem('accessToken') || '')
+        } catch (error) {
+          token = ''
+        }
 
         if ((userData.user_id || userData.id) && token) {
           return { name: 'apps-tags' }
