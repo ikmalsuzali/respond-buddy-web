@@ -37,6 +37,14 @@ const router = createRouter({
       path: '/payment/:paymentId/process',
       component: () => import('../pages/pages/misc/payment-process.vue'),
     },
+    {
+      path: '/privacy-policy',
+      component: () => import('../pages/pages/misc/privacy-policy.vue'),
+    },
+    {
+      path: '/terms-of-service',
+      component: () => import('../pages/pages/misc/terms-of-service.vue'),
+    },
     // {
     //   path: '/pages/account-settings',
     //   redirect: () => ({
