@@ -37,9 +37,6 @@ const router = createRouter({
       name: 'payment-process',
       path: '/payment/:paymentId/process',
       component: () => import('../pages/pages/misc/payment-process.vue'),
-      meta: {
-        public: true,
-      },
     },
     // {
     //   name: 'privacy-policy',
