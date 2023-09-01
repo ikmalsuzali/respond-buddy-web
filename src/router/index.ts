@@ -33,14 +33,14 @@ const router = createRouter({
         return { name: 'login', query: to.query }
       },
     },
-    // {
-    //   name: 'payment-process',
-    //   path: '/payment/:paymentId/process',
-    //   component: () => import('../pages/pages/misc/payment-process.vue'),
-    //   meta: {
-    //     public: true,
-    //   },
-    // },
+    {
+      name: 'payment-process',
+      path: '/payment/:paymentId/process',
+      component: () => import('../pages/pages/misc/payment-process.vue'),
+      meta: {
+        public: true,
+      },
+    },
     // {
     //   name: 'privacy-policy',
     //   path: '/privacy-policy',
