@@ -1,7 +1,7 @@
 export default [
   {
     title: 'Download Extension',
-    icon: { icon: 'tabler-smart-home' },
+    icon: { icon: 'tabler-puzzle' },
     href: 'https://chrome.google.com/webstore/detail/imglghahcjobingclpiepdghemmpejol',
     target: '_blank',
   },
