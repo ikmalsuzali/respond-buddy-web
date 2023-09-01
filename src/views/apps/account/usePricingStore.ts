@@ -50,6 +50,7 @@ export const usePricingStore = defineStore('PricingStore', {
         axios
           .post('/v1/checkout-session', {
             plan_id: planId,
+            url: window.location.origin,
           })
           .then((response) => {
             window.location.href = response.data.stripe_url
