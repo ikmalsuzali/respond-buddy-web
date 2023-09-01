@@ -286,3 +286,12 @@ z"
 <style lang="scss">
 @use '@core/scss/template/pages/misc.scss';
 </style>
+
+
+<route lang="yaml">
+  meta:
+    layout: blank
+    public: true
+    action: read
+    subject: Auth
+  </route>
