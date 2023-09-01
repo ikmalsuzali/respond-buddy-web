@@ -13,7 +13,7 @@ console.log(route.params.paymentId)
 
 const getPayment = async () => {
   try {
-    const response = await axios.get(`/api/payment/${route.params.paymentId}`)
+    const response = await axios.get(`/v1/payment/${route.params.paymentId}`)
     payment.value = response.data
     count.value = unref(count) + 1
   } catch (error) {
@@ -287,11 +287,10 @@ z"
 @use '@core/scss/template/pages/misc.scss';
 </style>
 
-
 <route lang="yaml">
-  meta:
-    layout: blank
-    public: true
-    action: read
-    subject: Auth
-  </route>
+meta:
+  layout: blank
+  public: true
+  action: read
+  subject: Auth
+</route>
