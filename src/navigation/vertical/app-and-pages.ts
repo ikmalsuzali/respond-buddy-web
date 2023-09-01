@@ -1,4 +1,10 @@
 export default [
+  {
+    title: 'Download Extension',
+    icon: { icon: 'tabler-smart-home' },
+    href: 'https://chrome.google.com/webstore/detail/imglghahcjobingclpiepdghemmpejol',
+    target: '_blank',
+  },
   // {
   //   title: 'Dashboard',
   //   icon: { icon: 'tabler-smart-home' },

@@ -278,4 +278,7 @@ const authThemeMask = useGenerateImageVariant(miscMaskLight, miscMaskDark)
 <route lang="yaml">
 meta:
   layout: blank
+  public: true
+  action: read
+  subject: Auth
 </route>

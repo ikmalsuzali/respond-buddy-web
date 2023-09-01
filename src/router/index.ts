@@ -33,18 +33,38 @@ const router = createRouter({
         return { name: 'login', query: to.query }
       },
     },
-    {
-      path: '/payment/:paymentId/process',
-      component: () => import('../pages/pages/misc/payment-process.vue'),
-    },
-    {
-      path: '/privacy-policy',
-      component: () => import('../pages/pages/misc/privacy-policy.vue'),
-    },
-    {
-      path: '/terms-of-service',
-      component: () => import('../pages/pages/misc/terms-of-service.vue'),
-    },
+    // {
+    //   name: 'payment-process',
+    //   path: '/payment/:paymentId/process',
+    //   component: () => import('../pages/pages/misc/payment-process.vue'),
+    //   meta: {
+    //     public: true,
+    //   },
+    // },
+    // {
+    //   name: 'privacy-policy',
+    //   path: '/privacy-policy',
+    //   component: () => import('../pages/privacy-policy.vue'),
+    //   meta: {
+    //     public: true,
+    //   },
+    // },
+    // {
+    //   name: 'terms-of-service',
+    //   path: '/terms-of-service',
+    //   component: () => import('../pages/terms-of-service.vue'),
+    //   meta: {
+    //     public: true,
+    //   },
+    // },
+    // {
+    //   name: 'auth-callback',
+    //   path: '/auth-callback',
+    //   component: () => import('../pages/pages/misc/auth-callback.vue'),
+    //   meta: {
+    //     public: true,
+    //   },
+    // },
     // {
     //   path: '/pages/account-settings',
     //   redirect: () => ({

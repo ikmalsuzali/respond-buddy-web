@@ -8,15 +8,12 @@ import authV2MaskLight from '@images/pages/misc-mask-light.png'
 import { VForm } from 'vuetify/components/VForm'
 
 import { useAppAbility } from '@/plugins/casl/useAppAbility'
+import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import axios from '@axios'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import {
-  alphaDashValidator,
-  emailValidator,
-  requiredValidator,
-} from '@validators'
+import { emailValidator, requiredValidator } from '@validators'
 
 const refVForm = ref<VForm>()
 const username = ref('')
@@ -153,14 +150,14 @@ const onSubmit = () => {
           <VForm ref="refVForm" @submit.prevent="onSubmit">
             <VRow>
               <!-- Username -->
-              <VCol cols="12" class="py-1">
+              <!-- <VCol cols="12" class="py-1">
                 <AppTextField
                   v-model="username"
                   autofocus
                   :rules="[requiredValidator, alphaDashValidator]"
                   label="Username"
                 />
-              </VCol>
+              </VCol> -->
 
               <!-- email -->
               <VCol cols="12" class="py-1">
@@ -218,8 +215,19 @@ const onSubmit = () => {
                     <template #label>
                       <span class="me-1">
                         I agree to
-                        <a href="javascript:void(0)" class="text-primary"
-                          >privacy policy & terms</a
+                        <a
+                          href="/privacy-policy"
+                          target="_blank"
+                          class="text-primary"
+                          >privacy policy</a
+                        >
+                        and
+                        <a
+                          href="/terms-of-service"
+                          target="_blank"
+                          class="text-primary"
+                        >
+                          terms of service</a
                         >
                       </span>
                     </template>
@@ -237,7 +245,7 @@ const onSubmit = () => {
                 </RouterLink>
               </VCol>
 
-              <!-- <VCol cols="12" class="d-flex align-center">
+              <VCol cols="12" class="d-flex align-center">
                 <VDivider />
                 <span class="mx-4">or</span>
                 <VDivider />
@@ -245,7 +253,7 @@ const onSubmit = () => {
 
               <VCol cols="12" class="text-center">
                 <AuthProvider />
-              </VCol> -->
+              </VCol>
             </VRow>
           </VForm>
         </VCardText>

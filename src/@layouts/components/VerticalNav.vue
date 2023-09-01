@@ -28,7 +28,6 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const showNavItems = props.navItems.filter((item: any) => !item.hidden)
-console.log('🚀 ~ file: VerticalNav.vue:30 ~ showNavItems:', showNavItems)
 
 const refNav = ref()
 
