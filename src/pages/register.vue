@@ -120,7 +120,6 @@ const onSubmit = () => {
                   { name: 'Store' },
                   { name: 'Recall' },
                   { name: 'Simplify' },
-                  { name: 'Translate to Chinese' },
                   { name: 'Send email' },
                   { name: 'Custom Prompts' },
                 ]"

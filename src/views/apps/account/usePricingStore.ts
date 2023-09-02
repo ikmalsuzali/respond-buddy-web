@@ -5,6 +5,10 @@ export const usePricingStore = defineStore('PricingStore', {
   state: () => ({
     isLoading: false,
     pricingPlans: [],
+    isDownloadDialogOpen: false,
+    selectedPlan: {
+      remarks: '',
+    },
   }),
   getters: {
     // get monthly pricing
@@ -44,18 +48,38 @@ export const usePricingStore = defineStore('PricingStore', {
         })
       })
     },
-    checkoutPlan(planId: string) {
+    setSelectedPan(plan: any) {
+      this.selectedPlan = {
+        ...plan,
+      }
+    },
+    toggleDownloadDialog(isOpen: boolean) {
+      this.isDownloadDialogOpen = isOpen
+      if (this.isDownloadDialogOpen === false) {
+        this.selectedPlan = {
+          remarks: '',
+        }
+      }
+    },
+    checkoutPlan(selectedPlan: any) {
+      this.selectedPlan = selectedPlan
       return new Promise((resolve) => {
         this.isLoading = true
         axios
           .post('/v1/checkout-session', {
-            plan_id: planId,
+            plan_id: selectedPlan.stripe_price_id,
             url: window.location.origin,
+            remarks: selectedPlan.remarks,
           })
           .then((response) => {
             window.location.href = response.data.stripe_url
-            this.isLoading = false
             resolve(response.data)
+          })
+          .finally(() => {
+            this.isLoading = false
+            this.selectedPlan = {
+              remarks: '',
+            }
           })
       })
     },

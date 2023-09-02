@@ -21,7 +21,7 @@ export const useAccountStore = defineStore('AccountStore', {
         description: '',
         key: '',
         meta: {},
-        order: 0
+        order: 0,
       },
     },
   }),

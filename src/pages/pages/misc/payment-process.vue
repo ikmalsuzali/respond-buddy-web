@@ -18,12 +18,13 @@ const getPayment = async () => {
     count.value = unref(count) + 1
   } catch (error) {
     clearInterval(intervalId.value)
-    router.push({
-      path: `/apps/pricings`,
-      query: {
-        status: 'failed',
-      },
-    })
+    window.location.href = '/apps/pricings?status=failed'
+    // router.push({
+    //   path: `/apps/pricings`,
+    //   query: {
+    //     status: 'failed',
+    //   },
+    // })
   }
 }
 
@@ -42,20 +43,10 @@ watch(
       clearInterval(intervalId.value)
     }
     if (unref(payment)?.status === 1)
-      router.push({
-        path: `/apps/pricings`,
-        query: {
-          status: 'success',
-        },
-      })
+      window.location.href = '/apps/pricings?status=success'
 
     if (unref(payment)?.status === 2) {
-      router.push({
-        path: `/apps/pricings`,
-        query: {
-          status: 'failed',
-        },
-      })
+      window.location.href = '/apps/pricings?status=failed'
     }
   }
 )
@@ -63,7 +54,7 @@ watch(
 watch(
   () => unref(count),
   (_) => {
-    if (unref(count) >= 3) {
+    if (unref(count) >= 5) {
       clearInterval(intervalId.value)
 
       router.push({

@@ -14,7 +14,6 @@ import '@styles/styles.scss'
 import { createPinia } from 'pinia'
 import { createApp, markRaw } from 'vue'
 import { useAccountStore } from './views/apps/account/useAccountStore'
-
 export const pinia = createPinia()
 
 pinia.use(({ store }) => {
@@ -36,8 +35,12 @@ app.use(abilitiesPlugin, ability, {
   useGlobalProperties: true,
 })
 
-useAccountStore().getItem()
-useAccountStore().getSubscriptionItem()
-
 // Mount vue app
 app.mount('#app')
+
+useAccountStore().getItem()
+console.log('router 123', router)
+console.log(window.location.href)
+if (!window.location.href.includes('/process')) {
+  useAccountStore().getSubscriptionItem()
+}

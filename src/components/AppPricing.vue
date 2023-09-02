@@ -28,11 +28,18 @@ const buttonData = (plan: any) => {
     return {
       color: 'error',
       text: 'Downgrade 😭',
+      action: () => {
+        pricingStore.selectedPlan = plan
+        pricingStore.toggleDownloadDialog(true)
+      },
     }
   } else {
     return {
       color: 'primary',
       text: 'Upgrade 🥹',
+      action: () => {
+        pricingStore.checkoutPlan(plan)
+      },
     }
   }
 }
@@ -168,7 +175,7 @@ interface Pricing {
         <!-- 👉 Plan actions -->
         <VCardActions class="px-10">
           <VBtn
-            @click="onCheckoutClick(plan)"
+            @click="buttonData(plan).action"
             :loading="pricingStore.isLoading"
             block
             :color="buttonData(plan).color"
@@ -181,6 +188,7 @@ interface Pricing {
       </VCard>
     </VCol>
   </VRow>
+  <DowngradeDialog />
   <!-- !SECTION  -->
 </template>
 

@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { Provider, createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -11,12 +11,12 @@ export default function useSupabaseAuth() {
   const error = ref(null)
   const isLoading = ref(false)
 
-  const signInWithGoogle = async () => {
+  const signInWithOAuth = async (provider: Provider) => {
     isLoading.value = true
     console.log(window.location.origin)
 
     const response = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider,
       options: {
         queryParams: {
           access_type: 'offline',
@@ -51,7 +51,7 @@ export default function useSupabaseAuth() {
   // }
 
   return {
-    signInWithGoogle,
+    signInWithOAuth,
     isLoading,
   }
 }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAppAbility } from '@/plugins/casl/useAppAbility'
+import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
 import axios from '@axios'
 import { useGenerateImageVariant } from '@core/composable/useGenerateImageVariant'
 import authV2LoginIllustrationBorderedDark from '@images/pages/auth-v2-login-illustration-bordered-dark.png'
@@ -107,7 +108,6 @@ const onSubmit = () => {
                   { name: 'Store' },
                   { name: 'Recall' },
                   { name: 'Simplify' },
-                  { name: 'Translate to Chinese' },
                   { name: 'Send email' },
                   { name: 'Custom Prompts' },
                 ]"
@@ -197,15 +197,15 @@ const onSubmit = () => {
                   Create an account
                 </RouterLink>
               </VCol>
-              <!-- <VCol cols="12" class="d-flex align-center">
+              <VCol cols="12" class="d-flex align-center">
                 <VDivider />
                 <span class="mx-4">or</span>
                 <VDivider />
               </VCol>
 
-=              <VCol cols="12" class="text-center">
+              <VCol cols="12" class="text-center">
                 <AuthProvider />
-              </VCol> -->
+              </VCol>
             </VRow>
           </VForm>
         </VCardText>
