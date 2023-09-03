@@ -42,7 +42,6 @@ const findAccessToken = (params: any) => {
 // Simulated API function
 const fetchApi = async (accessToken: string) => {
   // Use the access token to make API requests
-  console.log('Making API request with access token:', accessToken)
   let reponse = await axios.post('/v1/login/oauth', null, {
     headers: {
       'Content-Type': 'application/json',

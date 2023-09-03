@@ -15,32 +15,33 @@ const route = useRoute()
 const invoiceData = ref<InvoiceData>()
 
 // 👉 fetchInvoice
-invoiceListStore.fetchInvoice(Number(route.params.id)).then(response => {
-  invoiceData.value = {
-    invoice: response.data.invoice,
-    paymentDetails: response.data.paymentDetails,
+invoiceListStore
+  .fetchInvoice(Number(route.params.id))
+  .then((response) => {
+    invoiceData.value = {
+      invoice: response.data.invoice,
+      paymentDetails: response.data.paymentDetails,
 
-    /*
+      /*
       We are adding some extra data in response for data purpose
       Your response will contain this extra data
       Purpose is to make it more API friendly and less static as possible
     */
-    purchasedProducts: [
-      {
-        title: 'App Design',
-        cost: 24,
-        qty: 2,
-        description: 'Designed UI kit & app pages.',
-      },
-    ],
-    note: 'It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank You!',
-    paymentMethod: 'Bank Account',
-    salesperson: 'Tom Cook',
-    thanksNote: 'Thanks for your business',
-  }
-}).catch(error => {
-  console.log(error)
-})
+      purchasedProducts: [
+        {
+          title: 'App Design',
+          cost: 24,
+          qty: 2,
+          description: 'Designed UI kit & app pages.',
+        },
+      ],
+      note: 'It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank You!',
+      paymentMethod: 'Bank Account',
+      salesperson: 'Tom Cook',
+      thanksNote: 'Thanks for your business',
+    }
+  })
+  .catch((error) => {})
 
 const isSendSidebarActive = ref(false)
 const isAddPaymentSidebarActive = ref(false)
@@ -54,19 +55,12 @@ const paymentMethods = ['Bank Account', 'PayPal', 'UPI Transfer']
 <template>
   <VRow>
     <!-- 👉 InvoiceEditable   -->
-    <VCol
-      v-if="invoiceData?.invoice"
-      cols="12"
-      md="9"
-    >
+    <VCol v-if="invoiceData?.invoice" cols="12" md="9">
       <InvoiceEditable :data="invoiceData" />
     </VCol>
 
     <!-- 👉 Right Column: Invoice Action -->
-    <VCol
-      cols="12"
-      md="3"
-    >
+    <VCol cols="12" md="3">
       <VCard class="mb-8">
         <VCardText>
           <!-- 👉 Send Invoice Trigger button -->
@@ -87,7 +81,10 @@ const paymentMethods = ['Bank Account', 'PayPal', 'UPI Transfer']
                 color="secondary"
                 variant="tonal"
                 class="mb-2"
-                :to="{ name: 'apps-invoice-preview-id', params: { id: route.params.id } }"
+                :to="{
+                  name: 'apps-invoice-preview-id',
+                  params: { id: route.params.id },
+                }"
               >
                 Preview
               </VBtn>
@@ -95,12 +92,7 @@ const paymentMethods = ['Bank Account', 'PayPal', 'UPI Transfer']
 
             <div class="w-50">
               <!-- 👉 Save button -->
-              <VBtn
-                block
-                color="secondary"
-                variant="tonal"
-                class="mb-2"
-              >
+              <VBtn block color="secondary" variant="tonal" class="mb-2">
                 Save
               </VBtn>
             </div>
@@ -127,40 +119,25 @@ const paymentMethods = ['Bank Account', 'PayPal', 'UPI Transfer']
 
       <!-- 👉 Payment Terms -->
       <div class="d-flex align-center justify-space-between mb-2">
-        <VLabel for="payment-terms">
-          Payment Terms
-        </VLabel>
+        <VLabel for="payment-terms"> Payment Terms </VLabel>
         <div>
-          <VSwitch
-            id="payment-terms"
-            v-model="paymentTerms"
-          />
+          <VSwitch id="payment-terms" v-model="paymentTerms" />
         </div>
       </div>
 
       <!-- 👉 Client Notes -->
       <div class="d-flex align-center justify-space-between mb-2">
-        <VLabel for="client-notes">
-          Client Notes
-        </VLabel>
+        <VLabel for="client-notes"> Client Notes </VLabel>
         <div>
-          <VSwitch
-            id="client-notes"
-            v-model="clientNotes"
-          />
+          <VSwitch id="client-notes" v-model="clientNotes" />
         </div>
       </div>
 
       <!-- 👉 Payment Stub -->
       <div class="d-flex align-center justify-space-between">
-        <VLabel for="payment-stub">
-          Payment Stub
-        </VLabel>
+        <VLabel for="payment-stub"> Payment Stub </VLabel>
         <div>
-          <VSwitch
-            id="payment-stub"
-            v-model="paymentStub"
-          />
+          <VSwitch id="payment-stub" v-model="paymentStub" />
         </div>
       </div>
     </VCol>

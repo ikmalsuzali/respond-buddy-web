@@ -63,7 +63,6 @@ const formatBytes = (bytes: number) => {
 
 const onDownload = (memory: any) => {
   // Download s3 file
-  console.log(memory?.s3_s3Tostore?.s3_url)
   const link = document.createElement('a')
   link.href = memory?.s3_s3Tostore?.s3_url
   link.target = '_blank'

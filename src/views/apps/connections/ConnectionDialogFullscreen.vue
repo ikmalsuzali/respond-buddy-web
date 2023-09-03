@@ -94,7 +94,6 @@ const getFileSize = (file) => {
 }
 
 const onSave = () => {
-  console.log('🚀 ~ file: index.vue:61 ~ getStores ~ res', 'save')
   isLoading.value = true
   // if (checkIfAllFilesHaveBeenUploaded() && currentTab.value === 'upload') return
   if (currentTab.value === 'upload') {
@@ -153,7 +152,6 @@ const saveUploads = () => {
 
   Promise.all(promises)
     .then((results) => {
-      console.log('🚀 ~ file: index.vue:61 ~ getStores ~ res', results)
       memoryStore.setMemoryDialogOpen(false)
     })
     .catch((e) => {
@@ -167,10 +165,8 @@ const saveUploads = () => {
 const checkIfAllFilesHaveBeenUploaded = () => {
   const filesWithNoData = files.value.filter((file) => !file.data)
   if (filesWithNoData.length > 0) {
-    console.log('not all files have been uploaded')
     return false
   }
-  console.log('all files have been uploaded')
   return true
 }
 

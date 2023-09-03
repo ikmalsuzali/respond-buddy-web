@@ -89,9 +89,7 @@ const propertyListingData = ref<PropertyListingData>({
 
 const currentStep = ref(0)
 
-const onSubmit = () => {
-  console.log('propertyListingData :>> ', propertyListingData.value)
-}
+const onSubmit = () => {}
 </script>
 
 <template>
@@ -113,33 +111,37 @@ const onSubmit = () => {
         </VCardText>
       </VCol>
 
-      <VCol
-        cols="12"
-        md="8"
-      >
+      <VCol cols="12" md="8">
         <VCardText>
-          <VWindow
-            v-model="currentStep"
-            class="disable-tab-transition"
-          >
+          <VWindow v-model="currentStep" class="disable-tab-transition">
             <VWindowItem>
-              <PersonalDetails v-model:form-data="propertyListingData.personalDetails" />
+              <PersonalDetails
+                v-model:form-data="propertyListingData.personalDetails"
+              />
             </VWindowItem>
 
             <VWindowItem>
-              <PropertyDetails v-model:form-data="propertyListingData.propertyDetails" />
+              <PropertyDetails
+                v-model:form-data="propertyListingData.propertyDetails"
+              />
             </VWindowItem>
 
             <VWindowItem>
-              <PropertyFeatures v-model:form-data="propertyListingData.propertyFeatures" />
+              <PropertyFeatures
+                v-model:form-data="propertyListingData.propertyFeatures"
+              />
             </VWindowItem>
 
             <VWindowItem>
-              <PropertyArea v-model:form-data="propertyListingData.propertyArea" />
+              <PropertyArea
+                v-model:form-data="propertyListingData.propertyArea"
+              />
             </VWindowItem>
 
             <VWindowItem>
-              <PriceDetails v-model:form-data="propertyListingData.priceDetails" />
+              <PriceDetails
+                v-model:form-data="propertyListingData.priceDetails"
+              />
             </VWindowItem>
           </VWindow>
 
@@ -150,11 +152,7 @@ const onSubmit = () => {
               :disabled="currentStep === 0"
               @click="currentStep--"
             >
-              <VIcon
-                icon="tabler-arrow-left"
-                start
-                class="flip-in-rtl"
-              />
+              <VIcon icon="tabler-arrow-left" start class="flip-in-rtl" />
               Previous
             </VBtn>
 
@@ -167,17 +165,10 @@ const onSubmit = () => {
               submit
             </VBtn>
 
-            <VBtn
-              v-else
-              @click="currentStep++"
-            >
+            <VBtn v-else @click="currentStep++">
               Next
 
-              <VIcon
-                icon="tabler-arrow-right"
-                end
-                class="flip-in-rtl"
-              />
+              <VIcon icon="tabler-arrow-right" end class="flip-in-rtl" />
             </VBtn>
           </div>
         </VCardText>

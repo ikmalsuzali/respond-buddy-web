@@ -4,7 +4,6 @@ import { useAccountStore } from '@/views/apps/account/useAccountStore.ts'
 const accountStore = useAccountStore()
 const isConfirmDialogOpen = ref(false)
 accountStore.getItem()
-console.log(accountStore.accountDetails)
 const accountDataLocal = ref(accountStore.accountDetails)
 
 const onSaveClick = async () => {

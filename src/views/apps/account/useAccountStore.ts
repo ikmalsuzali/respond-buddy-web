@@ -102,7 +102,6 @@ export const useAccountStore = defineStore('AccountStore', {
           ...item,
         }
 
-        console.log(item)
         const mappedPayload = this.serializeItem()
         axios.put('/v1/user', mappedPayload).then((response) => {
           this.accountDetails = this.deserializeItem(response.data)

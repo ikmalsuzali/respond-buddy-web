@@ -45,7 +45,6 @@ const buttonData = (plan: any) => {
 }
 
 const onCheckoutClick = async (plan: any) => {
-  console.log(plan)
   if (!plan || !plan.stripe_price_id) return
   const response = await pricingStore.checkoutPlan(plan?.stripe_price_id)
 }

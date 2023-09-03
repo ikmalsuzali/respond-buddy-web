@@ -28,14 +28,7 @@ const messages = computed(() => {
   // @ts-ignore
   return memory.selectedMemoryChat[memory.selectedMemory.id]
 })
-console.log(
-  '🚀 ~ file: ChatLog.vue:26 ~ memory.selectedMemoryChat:',
-  memory.selectedMemoryChat
-)
-console.log(
-  '🚀 ~ file: ChatLog.vue:26 ~ memory.selectedMemory.id:',
-  memory.selectedMemory.id
-)
+
 
 const msgGroups = computed(() => {
   const _msgGroups: any = []
@@ -166,6 +159,7 @@ const msgGroups = computed(() => {
 
 .bot-msg-container {
   background-color: rgb(250, 249, 246);
+  padding: 8px;
 }
 
 .formatted-text {

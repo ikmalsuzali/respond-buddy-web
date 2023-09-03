@@ -13,7 +13,6 @@ export default function useSupabaseAuth() {
 
   const signInWithOAuth = async (provider: Provider) => {
     isLoading.value = true
-    console.log(window.location.origin)
 
     const response = await supabase.auth.signInWithOAuth({
       provider,

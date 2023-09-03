@@ -39,8 +39,6 @@ app.use(abilitiesPlugin, ability, {
 app.mount('#app')
 
 useAccountStore().getItem()
-console.log('router 123', router)
-console.log(window.location.href)
 if (!window.location.href.includes('/process')) {
   useAccountStore().getSubscriptionItem()
 }

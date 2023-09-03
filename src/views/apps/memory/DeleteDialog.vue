@@ -33,8 +33,6 @@ const deleteMethods = [
 const selectedMethod = ref('cancel')
 
 const onSubmitClick = () => {
-  console.log('🚀 ~ file: deleteDialog.vue:44 ~ onSubmitClick ~ onSubmitClick:')
-
   if (selectedMethod.value[0] === 'cancel') {
     emit('update:isDialogVisible', false)
   }

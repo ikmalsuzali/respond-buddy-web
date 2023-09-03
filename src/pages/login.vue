@@ -65,9 +65,7 @@ const login = () => {
       router.replace(route.query.to ? String(route.query.to) : '/')
     })
     .catch((e) => {
-      console.log(e.response)
       const error = e?.response?.data || {}
-      console.log('🚀 ~ file: login.vue:61 ~ login ~ error:', error)
 
       if (error.message) {
         errors.value = { password: error.message }

@@ -68,7 +68,6 @@ const saveFiles = (savingFiles) => {
         const uploadedBytes = progressEvent.loaded
         const totalBytes = progressEvent.total
         const uploadPercentage = (uploadedBytes / totalBytes) * 100
-        console.log(`Uploading: ${uploadPercentage.toFixed(2)}%`)
       },
     }
     const savedFile = savingFiles[i]
@@ -122,7 +121,6 @@ const getFileSize = (file) => {
 }
 
 const onSave = () => {
-  console.log('🚀 ~ file: index.vue:61 ~ getStores ~ res', 'save')
   isLoading.value = true
   // if (checkIfAllFilesHaveBeenUploaded() && currentTab.value === 'upload') return
   if (currentTab.value === 'upload') {
@@ -181,7 +179,6 @@ const saveUploads = () => {
 
   Promise.all(promises)
     .then((results) => {
-      console.log('🚀 ~ file: index.vue:61 ~ getStores ~ res', results)
       memoryStore.setMemoryDialogOpen(false)
     })
     .catch((e) => {

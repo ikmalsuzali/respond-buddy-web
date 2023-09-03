@@ -9,8 +9,6 @@ const payment = ref()
 let intervalId = ref()
 let count = ref(0)
 
-console.log(route.params.paymentId)
-
 const getPayment = async () => {
   try {
     const response = await axios.get(`/v1/payment/${route.params.paymentId}`)
