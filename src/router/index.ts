@@ -21,7 +21,7 @@ const router = createRouter({
           token = ''
         }
 
-        if ((userData.user_id || userData.id) && token) {
+        if ((userData?.user_id || userData?.id) && token) {
           return { name: 'apps-tags' }
         }
 

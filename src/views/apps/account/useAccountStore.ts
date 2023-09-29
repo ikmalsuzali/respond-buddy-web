@@ -84,7 +84,7 @@ export const useAccountStore = defineStore('AccountStore', {
     getItem() {
       if (!localStorage.getItem('accessToken')) return
       const userData = JSON.parse(localStorage.getItem('userData') || '{}')
-      if (userData.user_id || userData.id) {
+      if (userData?.user_id || userData?.id) {
         this.accountDetails = this.deserializeItem(userData)
       } else {
         return new Promise((resolve) => {
