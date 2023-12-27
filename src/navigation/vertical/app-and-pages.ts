@@ -30,11 +30,11 @@ export default [
     icon: { icon: 'tabler-tags' },
     to: 'apps-tags',
   },
-  {
-    title: 'Memories',
-    icon: { icon: 'tabler-database' },
-    to: 'apps-memory',
-  },
+  // {
+  //   title: 'Memories',
+  //   icon: { icon: 'tabler-database' },
+  //   to: 'apps-memory',
+  // },
   // {
   //   title: 'Connections',
   //   icon: { icon: 'tabler-cloud-data-connection' },

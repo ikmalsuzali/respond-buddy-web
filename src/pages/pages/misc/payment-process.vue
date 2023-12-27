@@ -29,7 +29,7 @@ const getPayment = async () => {
 const paymentIntervalInit = () => {
   intervalId.value = window.setInterval(() => {
     getPayment()
-  }, 3000)
+  }, 1500)
 }
 
 paymentIntervalInit()
